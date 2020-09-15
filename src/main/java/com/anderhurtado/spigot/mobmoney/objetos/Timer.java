@@ -4,19 +4,19 @@ import org.bukkit.Bukkit;
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 
 public class Timer{
-	public static int TICKS,KILLS;
+	public static int TIEMPO,KILLS;
+
 	public int killed=0;
+	public long ultimoPeriodo=System.currentTimeMillis();
+
 	public Timer(final User u){
 		u.setTimer(this);
-		Bukkit.getScheduler().runTaskLater(MobMoney.instancia,new Runnable(){
-			@Override
-			public void run(){
-				u.setTimer(null);
-			}
-		},TICKS);
 	}
 	public boolean addEntity(){
-		killed++;
+		if(ultimoPeriodo+TIEMPO<System.currentTimeMillis()){
+		    ultimoPeriodo=System.currentTimeMillis();
+		    killed=0;
+        }killed++;
 		return(killed<=KILLS);
 	}
 	public boolean canGiveReward(){

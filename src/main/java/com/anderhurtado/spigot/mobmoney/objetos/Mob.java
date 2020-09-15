@@ -4,11 +4,16 @@ import java.util.HashMap;
 import org.bukkit.entity.EntityType;
 
 public class Mob{
-	private static HashMap<EntityType,Mob> mobs=new HashMap<EntityType,Mob>();
+
+	private static final HashMap<EntityType,Mob> mobs=new HashMap<EntityType,Mob>();
+
 	public static Mob getEntidad(EntityType t){
 		return mobs.get(t);
 	}
-	
+
+	public static void limpiarMobs(){
+	    mobs.clear();
+    }
 	
 	private double price;
 	private String name;

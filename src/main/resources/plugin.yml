@@ -1,6 +1,6 @@
 name: MobMoney
 main: com.anderhurtado.spigot.mobmoney.MobMoney
-version: 2.5.2
+version: 2.6.0
 author: Anonymous_Dr
 description: Kill mobs to get money.
 depend: [Vault]

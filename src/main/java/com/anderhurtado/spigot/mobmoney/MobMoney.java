@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.anderhurtado.spigot.mobmoney.objetos.*;
+import com.anderhurtado.spigot.mobmoney.objetos.Mob;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -91,7 +92,7 @@ public class MobMoney extends JavaPlugin{
 					if(u.getReceiveOnDeath())sendMessage(msg.get("Events.hunt").replace("%entity%",mob.getName()).replace("%reward%",String.valueOf(mob.getPrice())),j);
 					eco.depositPlayer(j,mob.getPrice());
 				}
-				@SuppressWarnings("deprecation")
+
 				@EventHandler
 				public void alSpawnear(CreatureSpawnEvent e){
 					if(spawnban.contains(e.getSpawnReason())){
@@ -181,7 +182,7 @@ public class MobMoney extends JavaPlugin{
 		yml.set("Commands.Messages.delWorld","&aWorld disabled!");
 		yml.set("Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
 		yml.set("Commands.Messages.WorldNotFinded","&cThe world has not been found!");
-		yml.set("Commands.Use.reload","&aReload config: &b/mobmoney config");
+		yml.set("Commands.Use.reload","&aReload config: &b/mobmoney reload");
 		yml.set("Commands.Use.enableWorld","&aEnable world: &b/mobmoney enableworld <World>");
 		yml.set("Commands.Use.disableWorld","&aDisable world: &b/mobmoney disableworld <World>");
 		yml.set("Commands.Use.toggle","&aToggle messages: &b/mobmoney toggle");
@@ -295,13 +296,15 @@ public class MobMoney extends JavaPlugin{
 			config.set("Language","English");
 			config.save(fConfig);
 			fidioma=new File(idiomas+"/English.yml");
-		}for(EntityType et:EntityType.values()){
+		}User.limpiarUsuarios();
+		Mob.limpiarMobs();
+		for(EntityType et:EntityType.values()){
 			String name=et.name().toLowerCase();
 			new Mob(et,config.getDouble("Entity.economy."+name),config.getString("Entity.name."+name));
 		}disableCreative=config.getBoolean("DisableCreative");
 		enableTimer=config.getBoolean("Timer.enable");
 		if(enableTimer){
-			Timer.TICKS=config.getInt("Timer.resetTimeInSeconds")*20;
+			Timer.TIEMPO=(int)(config.getDouble("Timer.resetTimeInSeconds")*1000);
 			Timer.KILLS=config.getInt("Timer.maxKills");
 		}spawnban.clear();
 		for(SpawnReason sr:SpawnReason.values())if(config.getBoolean("BlockPayEntitiesSpawnedBy."+sr.name()))spawnban.add(sr);
@@ -442,11 +445,11 @@ public class MobMoney extends JavaPlugin{
 	}
 
 	public static void sendMessage(String msg,Player j){
-        try{
+        if(action)try{
             HotbarMessager.sendHotBarMessage(j,msg);
         }catch(Exception Ex){
             Ex.printStackTrace();
             j.sendMessage(msg);
-        }
+        }else j.sendMessage(msg);
     }
 }
