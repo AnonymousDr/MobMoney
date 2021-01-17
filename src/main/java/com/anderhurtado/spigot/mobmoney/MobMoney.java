@@ -29,30 +29,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.milkbowl.vault.economy.Economy;
 
 public class MobMoney extends JavaPlugin{
-	public static final HashMap<String,String> msg=new HashMap<String,String>();
-	public static final List<SpawnReason> spawnban=new ArrayList<SpawnReason>();
-	public static final List<String> bannedUUID=new ArrayList<String>();
+	public static final HashMap<String,String> msg=new HashMap<>();
+	public static final List<SpawnReason> spawnban=new ArrayList<>();
+	public static final List<String> bannedUUID=new ArrayList<>();
 	public static List<String> disabledWorlds;
 	public static boolean disableCreative,enableTimer;
 	public static File cplugin;
 	public static MobMoney instancia;
-	public static Economy eco;
+    public static Economy eco;
 	static boolean action;
 	static int day;
 	public static HashMap<String,Double> dailylimit;
 	public static double dailylimitLimit;
-	private Metrics metrics;
-	
-	public void onEnable(){
+
+    public void onEnable(){
 		try{
 			instancia=this;
 			cplugin=getDataFolder();
 			if(!cplugin.exists())cplugin.mkdir();
 			setConfig();
 			eco=Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
-			metrics=new Metrics(this);
+            Metrics metrics=new Metrics(this);
 			String s=Bukkit.getVersion().split("MC: ")[1].replace(")","");
-			if(!(s.startsWith("1")&&Integer.valueOf(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new DrownedProtection(),this);
+			if(!(s.startsWith("1")&&Integer.parseInt(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new DrownedProtection(),this);
 			Bukkit.getPluginManager().registerEvents(new Listener(){
 				@EventHandler
 				public void alEntrar(PlayerJoinEvent e){
@@ -61,7 +60,6 @@ public class MobMoney extends JavaPlugin{
 				@EventHandler
 				public void alSalir(PlayerQuitEvent e){
 					User u=User.getUser(e.getPlayer().getName());
-					if(u!=null)u.disconnect();
 				}
 				@EventHandler
 				public void alMorirENTIDAD(EntityDeathEvent e){
@@ -74,7 +72,6 @@ public class MobMoney extends JavaPlugin{
 					if(!j.hasPermission("mobmoney.get"))return;
 					if(disableCreative&&j.getGameMode().equals(GameMode.CREATIVE))return;
                     User u=User.getUser(j.getName());
-                    if(u==null)return;
 					if(bannedUUID.contains(m.getUniqueId().toString())){
 						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.entityBanned"),j);
 						return;
@@ -90,7 +87,7 @@ public class MobMoney extends JavaPlugin{
                         }dailylimit.replace(uuid,dailylimit.get(uuid)+mob.getPrice());
                     }
 					if(u.getReceiveOnDeath())sendMessage(msg.get("Events.hunt").replace("%entity%",mob.getName()).replace("%reward%",String.valueOf(mob.getPrice())),j);
-					eco.depositPlayer(j,mob.getPrice());
+                    eco.depositPlayer(j,mob.getPrice());
 				}
 
 				@EventHandler
@@ -101,6 +98,7 @@ public class MobMoney extends JavaPlugin{
 					    try{
 					        for(Entity P:E.getPassengers())bannedUUID.add(P.getUniqueId().toString());
                         }catch(Throwable Ex){
+                            //noinspection deprecation
                             Entity P=E.getPassenger();
                             if(P!=null)bannedUUID.add(P.getUniqueId().toString());
                         }
@@ -165,27 +163,27 @@ public class MobMoney extends JavaPlugin{
 		FileConfiguration yml=new YamlConfiguration();
 		if(!archivo.exists())archivo.createNewFile();
 		else yml.load(archivo);
-		yml.set("Events.hunt","&aYou've hunted a &b%entity%&a and you've been rewarded %reward%&a!");
-		yml.set("Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
-		yml.set("Events.entityBanned","&cThe entity you have hunted is banned.");
-		yml.set("Events.dailyLimitReached","&cYou reached the limit of money you can get today. (%limit%$)");
-		yml.set("Commands.noPermission","&cYou don't have enough privileges for it.");
-		yml.set("Commands.onlyPlayers","&cThis command only can be executed by in-game players.");
-		yml.set("Commands.invalidArguments","&cInvalid arguments.");
-		yml.set("Commands.arguments.reload","reload");
-		yml.set("Commands.arguments.disableWorld","disableworld");
-		yml.set("Commands.arguments.enableWorld","enableworld");
-		yml.set("Commands.arguments.toggle","toggle");
-		yml.set("Commands.Messages.enabledMessages","&aNow you will receive messages!");
-		yml.set("Commands.Messages.disabledMessages","&6Now you will not receive messages!");
-		yml.set("Commands.Messages.addWorld","&aWorld enabled!");
-		yml.set("Commands.Messages.delWorld","&aWorld disabled!");
-		yml.set("Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
-		yml.set("Commands.Messages.WorldNotFinded","&cThe world has not been found!");
-		yml.set("Commands.Use.reload","&aReload config: &b/mobmoney reload");
-		yml.set("Commands.Use.enableWorld","&aEnable world: &b/mobmoney enableworld <World>");
-		yml.set("Commands.Use.disableWorld","&aDisable world: &b/mobmoney disableworld <World>");
-		yml.set("Commands.Use.toggle","&aToggle messages: &b/mobmoney toggle");
+		setDefault(yml,"Events.hunt","&aYou've hunted a &b%entity%&a and you've been rewarded %reward%&a!");
+		setDefault(yml,"Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
+		setDefault(yml,"Events.entityBanned","&cThe entity you have hunted is banned.");
+		setDefault(yml,"Events.dailyLimitReached","&cYou reached the limit of money you can get today. (%limit%$)");
+		setDefault(yml,"Commands.noPermission","&cYou don't have enough privileges for it.");
+		setDefault(yml,"Commands.onlyPlayers","&cThis command only can be executed by in-game players.");
+		setDefault(yml,"Commands.invalidArguments","&cInvalid arguments.");
+		setDefault(yml,"Commands.arguments.reload","reload");
+		setDefault(yml,"Commands.arguments.disableWorld","disableworld");
+		setDefault(yml,"Commands.arguments.enableWorld","enableworld");
+		setDefault(yml,"Commands.arguments.toggle","toggle");
+		setDefault(yml,"Commands.Messages.enabledMessages","&aNow you will receive messages!");
+		setDefault(yml,"Commands.Messages.disabledMessages","&6Now you will not receive messages!");
+		setDefault(yml,"Commands.Messages.addWorld","&aWorld enabled!");
+		setDefault(yml,"Commands.Messages.delWorld","&aWorld disabled!");
+		setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
+		setDefault(yml,"Commands.Messages.WorldNotFinded","&cThe world has not been found!");
+		setDefault(yml,"Commands.Use.reload","&aReload config: &b/mobmoney reload");
+		setDefault(yml,"Commands.Use.enableWorld","&aEnable world: &b/mobmoney enableworld <World>");
+		setDefault(yml,"Commands.Use.disableWorld","&aDisable world: &b/mobmoney disableworld <World>");
+		setDefault(yml,"Commands.Use.toggle","&aToggle messages: &b/mobmoney toggle");
 		yml.save(archivo);
 		
 		//Español
@@ -193,27 +191,27 @@ public class MobMoney extends JavaPlugin{
 		yml=new YamlConfiguration();
 		if(!archivo.exists())archivo.createNewFile();
 		else yml.load(archivo);
-		yml.set("Events.hunt","&a¡Has cazado un &b%entity%&a y has sido recompensado con %reward%&a$!");
-		yml.set("Events.MaxKillsReached","&c¡Has alcanzado el límite de entidades que puedes matar!");
-		yml.set("Events.entityBanned","&cLa entidad que has cazado se encuentra baneada.");
-        yml.set("Events.dailyLimitReached","&cHas alcanzado el límite de dinero que puedes obtener hoy. (%limit%$)");
-		yml.set("Commands.noPermission","&cNo tienes suficientes privilegios para ello.");
-		yml.set("Commands.onlyPlayers","&cEste comando solo puede ser ejecutado por jugadores dentro del juego.");
-		yml.set("Commands.invalidArguments","&cArgumentos inválidos.");
-		yml.set("Commands.arguments.reload","recargar");
-		yml.set("Commands.arguments.disableWorld","deshabilitarmundo");
-		yml.set("Commands.arguments.enableWorld","habilitarmundo");
-		yml.set("Commands.arguments.toggle","toggle");
-		yml.set("Commands.Messages.enabledMessages","&a¡Ahora recibirás mensajes!");
-		yml.set("Commands.Messages.disabledMessages","&6¡Ya no recibirás mensajes!");
-		yml.set("Commands.Messages.addWorld","&a¡Mundo habilitado!");
-		yml.set("Commands.Messages.delWorld","&a¡Mundo deshabilitado!");
-		yml.set("Commands.Messages.CurrentlyWorldAdded","&6¡El mundo ya estaba en la lista!");
-		yml.set("Commands.Messages.WorldNotFinded","&c¡No se ha encontrado el mundo!");
-		yml.set("Commands.Use.reload","&aRecargar la configuración: &b/mobmoney recargar");
-		yml.set("Commands.Use.enableWorld","&aHabilitar mundo: &b/mobmoney habilitarmundo <Mundo>");
-		yml.set("Commands.Use.disableWorld","&aDeshabilitar mundo: &b/mobmoney deshabilitarmundo <Mundo>");
-		yml.set("Commands.Use.toggle","&aDeshabilitar mensajes: &b/mobmoney toggle");
+		setDefault(yml,"Events.hunt","&a¡Has cazado un &b%entity%&a y has sido recompensado con %reward%&a$!");
+		setDefault(yml,"Events.MaxKillsReached","&c¡Has alcanzado el límite de entidades que puedes matar!");
+		setDefault(yml,"Events.entityBanned","&cLa entidad que has cazado se encuentra baneada.");
+        setDefault(yml,"Events.dailyLimitReached","&cHas alcanzado el límite de dinero que puedes obtener hoy. (%limit%$)");
+		setDefault(yml,"Commands.noPermission","&cNo tienes suficientes privilegios para ello.");
+		setDefault(yml,"Commands.onlyPlayers","&cEste comando solo puede ser ejecutado por jugadores dentro del juego.");
+		setDefault(yml,"Commands.invalidArguments","&cArgumentos inválidos.");
+		setDefault(yml,"Commands.arguments.reload","recargar");
+		setDefault(yml,"Commands.arguments.disableWorld","deshabilitarmundo");
+		setDefault(yml,"Commands.arguments.enableWorld","habilitarmundo");
+		setDefault(yml,"Commands.arguments.toggle","toggle");
+		setDefault(yml,"Commands.Messages.enabledMessages","&a¡Ahora recibirás mensajes!");
+		setDefault(yml,"Commands.Messages.disabledMessages","&6¡Ya no recibirás mensajes!");
+		setDefault(yml,"Commands.Messages.addWorld","&a¡Mundo habilitado!");
+		setDefault(yml,"Commands.Messages.delWorld","&a¡Mundo deshabilitado!");
+		setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6¡El mundo ya estaba en la lista!");
+		setDefault(yml,"Commands.Messages.WorldNotFinded","&c¡No se ha encontrado el mundo!");
+		setDefault(yml,"Commands.Use.reload","&aRecargar la configuración: &b/mobmoney recargar");
+		setDefault(yml,"Commands.Use.enableWorld","&aHabilitar mundo: &b/mobmoney habilitarmundo <Mundo>");
+		setDefault(yml,"Commands.Use.disableWorld","&aDeshabilitar mundo: &b/mobmoney deshabilitarmundo <Mundo>");
+		setDefault(yml,"Commands.Use.toggle","&aDeshabilitar mensajes: &b/mobmoney toggle");
 		yml.save(archivo);
 		
 		//Català
@@ -221,27 +219,27 @@ public class MobMoney extends JavaPlugin{
 		yml=new YamlConfiguration();
 		if(!archivo.exists())archivo.createNewFile();
 		else yml.load(archivo);
-		yml.set("Events.hunt","&aHas caçat un &b%entity%&a i has sigut recompensat amb %reward%&a$!");
-		yml.set("Events.MaxKillsReached","&cHas arribat al limit d'entitats que pots matar!");
-		yml.set("Events.entityBanned","&cL'entitat que has caçat es troba banejada.");
-        yml.set("Events.dailyLimitReached","&cHas arribat al limit de diners que pots obtenir avui. (%limit%$)");
-		yml.set("Commands.noPermission","&cNo tens suficients privilegis per a això.");
-		yml.set("Commands.onlyPlayers","&cAquest comand solamment pot ser executat per jugadors dins del joc.");
-		yml.set("Commands.invalidArguments","&cArguments invàlids.");
-		yml.set("Commands.arguments.reload","recarregar");
-		yml.set("Commands.arguments.disableWorld","deshabilitarmon");
-		yml.set("Commands.arguments.enableWorld","habilitarmon");
-		yml.set("Commands.arguments.toggle","toggle");
-		yml.set("Commands.Messages.enabledMessages","&aAra rebràs missatges!");
-		yml.set("Commands.Messages.disabledMessages","&6Ja no rebràs missatges!");
-		yml.set("Commands.Messages.addWorld","&aMón habilitat!");
-		yml.set("Commands.Messages.delWorld","&aMón deshabilitat!");
-		yml.set("Commands.Messages.CurrentlyWorldAdded","&6El món ja estava a la llista!");
-		yml.set("Commands.Messages.WorldNotFinded","&cNo s'ha trobat el món!");
-		yml.set("Commands.Use.reload","&aRecarregar la configuració: &b/mobmoney recarregar");
-		yml.set("Commands.Use.enableWorld","&aHabilitar món: &b/mobmoney habilitarmon <Món>");
-		yml.set("Commands.Use.disableWorld","&aDeshabilitar món: &b/mobmoney deshabilitarmon <Món>");
-		yml.set("Commands.Use.toggle","&aDeshabilitar messatges: &b/mobmoney toggle");
+		setDefault(yml,"Events.hunt","&aHas caçat un &b%entity%&a i has sigut recompensat amb %reward%&a$!");
+		setDefault(yml,"Events.MaxKillsReached","&cHas arribat al limit d'entitats que pots matar!");
+		setDefault(yml,"Events.entityBanned","&cL'entitat que has caçat es troba banejada.");
+        setDefault(yml,"Events.dailyLimitReached","&cHas arribat al limit de diners que pots obtenir avui. (%limit%$)");
+		setDefault(yml,"Commands.noPermission","&cNo tens suficients privilegis per a això.");
+		setDefault(yml,"Commands.onlyPlayers","&cAquest comand solamment pot ser executat per jugadors dins del joc.");
+		setDefault(yml,"Commands.invalidArguments","&cArguments invàlids.");
+		setDefault(yml,"Commands.arguments.reload","recarregar");
+		setDefault(yml,"Commands.arguments.disableWorld","deshabilitarmon");
+		setDefault(yml,"Commands.arguments.enableWorld","habilitarmon");
+		setDefault(yml,"Commands.arguments.toggle","toggle");
+		setDefault(yml,"Commands.Messages.enabledMessages","&aAra rebràs missatges!");
+		setDefault(yml,"Commands.Messages.disabledMessages","&6Ja no rebràs missatges!");
+		setDefault(yml,"Commands.Messages.addWorld","&aMón habilitat!");
+		setDefault(yml,"Commands.Messages.delWorld","&aMón deshabilitat!");
+		setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6El món ja estava a la llista!");
+		setDefault(yml,"Commands.Messages.WorldNotFinded","&cNo s'ha trobat el món!");
+		setDefault(yml,"Commands.Use.reload","&aRecarregar la configuració: &b/mobmoney recarregar");
+		setDefault(yml,"Commands.Use.enableWorld","&aHabilitar món: &b/mobmoney habilitarmon <Món>");
+		setDefault(yml,"Commands.Use.disableWorld","&aDeshabilitar món: &b/mobmoney deshabilitarmon <Món>");
+		setDefault(yml,"Commands.Use.toggle","&aDeshabilitar messatges: &b/mobmoney toggle");
 		yml.save(archivo);
 
         //Dutch
@@ -249,27 +247,27 @@ public class MobMoney extends JavaPlugin{
         yml=new YamlConfiguration();
         if(!archivo.exists())archivo.createNewFile();
         else yml.load(archivo);
-        yml.set("Events.hunt","&aJe hebt een &b%entity%&e vermoord en daarvoor heb je %reward%&e punt(en) gekregen!");
-        yml.set("Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
-        yml.set("Events.entityBanned","&cDeze mob komt van een spawner! Voor mobs uit spawners staat MobMoney &c&luitgeschakeld&e om puntenfarms te voorkomen.");
-        yml.set("Events.dailyLimitReached","&cJe hebt het maximum aantal punten per dag bereikt! (%limit%$)");
-        yml.set("Commands.noPermission","&cSorry, maar je hebt geen permissies om dit commando uit te voeren.");
-        yml.set("Commands.onlyPlayers","&cDit commando bestaat niet. Type /help voor een lijst met alle commandos.");
-        yml.set("Commands.invalidArguments","&cJe argumenten kloppen niet! Probeer het opnieuw.");
-        yml.set("Commands.arguments.reload","herlaad");
-        yml.set("Commands.arguments.disableWorld","disableworld");
-        yml.set("Commands.arguments.enableWorld","enableworld");
-        yml.set("Commands.arguments.toggle","toggle");
-        yml.set("Commands.Messages.enabledMessages","&aJe hebt berichten voor MobMoney &a&lingeschakeld&e.");
-        yml.set("Commands.Messages.disabledMessages","&6Je hebt berichten voor MobMoney &c&luitgeschakeld&e.");
-        yml.set("Commands.Messages.addWorld","&aWorld enabled!");
-        yml.set("Commands.Messages.delWorld","&aWorld disabled!");
-        yml.set("Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
-        yml.set("Commands.Messages.WorldNotFinded","&cThe world has not been found!");
-        yml.set("Commands.Use.reload","&aHerlaad de configuratie: &e/mobmoney herlaad");
-        yml.set("Commands.Use.enableWorld","&aSchakel een wereld in: &e/mobmoney enableworld <wereld>");
-        yml.set("Commands.Use.disableWorld","&aSchakel een wereld uit: &e/mobmoney disableworld <wereld>");
-        yml.set("Commands.Use.toggle","&aSchakel mob-killberichten in/uit: &e/mobmoney toggle");
+        setDefault(yml,"Events.hunt","&aJe hebt een &b%entity%&e vermoord en daarvoor heb je %reward%&e punt(en) gekregen!");
+        setDefault(yml,"Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
+        setDefault(yml,"Events.entityBanned","&cDeze mob komt van een spawner! Voor mobs uit spawners staat MobMoney &c&luitgeschakeld&e om puntenfarms te voorkomen.");
+        setDefault(yml,"Events.dailyLimitReached","&cJe hebt het maximum aantal punten per dag bereikt! (%limit%$)");
+        setDefault(yml,"Commands.noPermission","&cSorry, maar je hebt geen permissies om dit commando uit te voeren.");
+        setDefault(yml,"Commands.onlyPlayers","&cDit commando bestaat niet. Type /help voor een lijst met alle commandos.");
+        setDefault(yml,"Commands.invalidArguments","&cJe argumenten kloppen niet! Probeer het opnieuw.");
+        setDefault(yml,"Commands.arguments.reload","herlaad");
+        setDefault(yml,"Commands.arguments.disableWorld","disableworld");
+        setDefault(yml,"Commands.arguments.enableWorld","enableworld");
+        setDefault(yml,"Commands.arguments.toggle","toggle");
+        setDefault(yml,"Commands.Messages.enabledMessages","&aJe hebt berichten voor MobMoney &a&lingeschakeld&e.");
+        setDefault(yml,"Commands.Messages.disabledMessages","&6Je hebt berichten voor MobMoney &c&luitgeschakeld&e.");
+        setDefault(yml,"Commands.Messages.addWorld","&aWorld enabled!");
+        setDefault(yml,"Commands.Messages.delWorld","&aWorld disabled!");
+        setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
+        setDefault(yml,"Commands.Messages.WorldNotFinded","&cThe world has not been found!");
+        setDefault(yml,"Commands.Use.reload","&aHerlaad de configuratie: &e/mobmoney herlaad");
+        setDefault(yml,"Commands.Use.enableWorld","&aSchakel een wereld in: &e/mobmoney enableworld <wereld>");
+        setDefault(yml,"Commands.Use.disableWorld","&aSchakel een wereld uit: &e/mobmoney disableworld <wereld>");
+        setDefault(yml,"Commands.Use.toggle","&aSchakel mob-killberichten in/uit: &e/mobmoney toggle");
         yml.save(archivo);
 		
 		//Cargando configuración
@@ -327,7 +325,7 @@ public class MobMoney extends JavaPlugin{
 				File f=new File(cplugin+"/entitybans.dat");
 				if(!f.exists())f.createNewFile();
 				FileConfiguration yml=new YamlConfiguration();
-				yml.set("Bans",bans);
+				setDefault(yml,"Bans",bans);
 				yml.save(f);
 			}catch(Exception Ex){
 				Ex.printStackTrace();
@@ -340,8 +338,8 @@ public class MobMoney extends JavaPlugin{
             File dl=new File(cplugin+"/dailylimit.dat");
             if(!dl.exists())dl.createNewFile();
             FileConfiguration yml=new YamlConfiguration();
-            yml.set("day",day);
-            for(String s:dailylimit.keySet())yml.set("users."+s,dailylimit.get(s));
+            setDefault(yml,"day",day);
+            for(String s:dailylimit.keySet())setDefault(yml,"users."+s,dailylimit.get(s));
             yml.save(dl);
         }catch(Exception Ex){
             Ex.printStackTrace();
@@ -351,10 +349,10 @@ public class MobMoney extends JavaPlugin{
 	public boolean onCommand(CommandSender j,Command cmd,String label,String[] args){
 		if(args.length==0){
 			boolean permiso=false;
-			if(j.hasPermission("mobmoney.reload")?permiso=true:false)j.sendMessage(msg.get("Commands.Use.reload"));
-			if(j.hasPermission("mobmoney.enableworld")?permiso=true:false)j.sendMessage(msg.get("Commands.Use.enableWorld"));
-			if(j.hasPermission("mobmoney.disableworld")?permiso=true:false)j.sendMessage(msg.get("Commands.Use.disableWorld"));
-			if(j.hasPermission("mobmoney.toggle")?permiso=true:false)j.sendMessage(msg.get("Commands.Use.toggle"));
+			if(j.hasPermission("mobmoney.reload")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.reload"));
+			if(j.hasPermission("mobmoney.enableworld")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.enableWorld"));
+			if(j.hasPermission("mobmoney.disableworld")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.disableWorld"));
+			if(j.hasPermission("mobmoney.toggle")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.toggle"));
 			if(!permiso)j.sendMessage(msg.get("Commands.noPermission"));
 			return true;
 		}String arg0=args[0];
@@ -389,7 +387,7 @@ public class MobMoney extends JavaPlugin{
 				File f=new File(cplugin+"/config.yml");
 				FileConfiguration yml=new YamlConfiguration();
 				yml.load(f);
-				yml.set("disabledWorlds",disabledWorlds);
+				setDefault(yml,"disabledWorlds",disabledWorlds);
 				yml.save(f);
 				j.sendMessage(msg.get("Commands.Messages.delWorld"));
 			}catch(Exception Ex){
@@ -414,7 +412,7 @@ public class MobMoney extends JavaPlugin{
 				File f=new File(cplugin+"/config.yml");
 				FileConfiguration yml=new YamlConfiguration();
 				yml.load(f);
-				yml.set("disabledWorlds",disabledWorlds);
+				setDefault(yml,"disabledWorlds",disabledWorlds);
 				yml.save(f);
 				j.sendMessage(msg.get("Commands.Messages.addWorld"));
 			}catch(Exception Ex){
@@ -428,7 +426,6 @@ public class MobMoney extends JavaPlugin{
 				j.sendMessage(msg.get("Commands.onlyPlayers"));
 				return true;
 			}User u=User.getUser(j.getName());
-			if(u==null)return true;
 			if(u.getReceiveOnDeath()){
 				u.setReceiveOnDeath(false);
 				j.sendMessage(msg.get("Commands.Messages.disabledMessages"));
@@ -443,6 +440,10 @@ public class MobMoney extends JavaPlugin{
 		if(j.hasPermission("mobmoney.toggle"))j.sendMessage(msg.get("Commands.Use.toggle"));
 		return true;
 	}
+
+	private void setDefault(FileConfiguration yml,String key,Object value){
+	    if(!yml.contains(key))yml.set(key,value);
+    }
 
 	public static void sendMessage(String msg,Player j){
         if(action)try{
