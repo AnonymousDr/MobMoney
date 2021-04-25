@@ -66,7 +66,7 @@ public class MobMoney extends JavaPlugin{
 					LivingEntity m=e.getEntity();
 					if(disabledWorlds.contains(m.getWorld().getName()))return;
 					Mob mob=Mob.getEntidad(e.getEntityType());
-					if(mob==null || mob.getPrice() <= 0)return;
+					if(mob==null || mob.getPrice() == 0)return;
 					Player j=m.getKiller();
 					if(j==null)return;
 					if(!j.hasPermission("mobmoney.get"))return;
