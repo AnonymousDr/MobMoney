@@ -5,10 +5,10 @@ import org.bukkit.entity.EntityType;
 
 public class Mob{
 
-	private static final HashMap<EntityType,Mob> mobs=new HashMap<EntityType,Mob>();
+	private static final HashMap<String,Mob> mobs=new HashMap<>();
 
-	public static Mob getEntidad(EntityType t){
-		return mobs.get(t);
+	public static Mob getEntidad(String t){
+		return mobs.get(t.toLowerCase());
 	}
 
 	public static void limpiarMobs(){
@@ -18,8 +18,8 @@ public class Mob{
 	private double price;
 	private String name;
 	
-	public Mob(EntityType et,double precio,String nombre){
-		mobs.put(et,this);
+	public Mob(String et,double precio,String nombre){
+		mobs.put(et.toLowerCase(),this);
 		price=precio;
 		name=nombre;
 	}

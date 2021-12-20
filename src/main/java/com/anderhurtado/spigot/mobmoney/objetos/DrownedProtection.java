@@ -16,7 +16,7 @@ public class DrownedProtection implements Listener{
 
     @EventHandler
     public void alSpawnearEntidad(CreatureSpawnEvent e){
-        if(!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.DROWNED))return;
+        if(!e.getSpawnReason().name().equals("DROWNED"))return;
         Entity E=e.getEntity();
         Location l=E.getLocation();
         for(Entity en:E.getNearbyEntities(0,0,0)){

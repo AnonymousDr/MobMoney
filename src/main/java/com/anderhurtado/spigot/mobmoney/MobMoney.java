@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.anderhurtado.spigot.mobmoney.objetos.*;
 import com.anderhurtado.spigot.mobmoney.objetos.Mob;
+import com.anderhurtado.spigot.mobmoney.util.MetaEntityManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -33,7 +34,7 @@ public class MobMoney extends JavaPlugin{
 	public static final List<SpawnReason> spawnban=new ArrayList<>();
 	public static final List<String> bannedUUID=new ArrayList<>();
 	public static List<String> disabledWorlds;
-	public static boolean disableCreative,enableTimer;
+	public static boolean disableCreative,enableTimer, debug;
 	public static File cplugin;
 	public static MobMoney instancia;
     public static Economy eco;
@@ -64,8 +65,12 @@ public class MobMoney extends JavaPlugin{
 				@EventHandler
 				public void alMorirENTIDAD(EntityDeathEvent e){
 					LivingEntity m=e.getEntity();
+					String entityType;
+					if(m.getType().equals(EntityType.UNKNOWN)) entityType = MetaEntityManager.getEntityType(m);
+					else entityType = m.getType().toString();
+					if(debug) System.out.println("[MOBMONEY DEBUG] Entity killed: "+entityType);
 					if(disabledWorlds.contains(m.getWorld().getName()))return;
-					Mob mob=Mob.getEntidad(e.getEntityType());
+					Mob mob=Mob.getEntidad(entityType);
 					if(mob==null || mob.getPrice() == 0)return;
 					Player j=m.getKiller();
 					if(j==null)return;
@@ -96,10 +101,10 @@ public class MobMoney extends JavaPlugin{
 					    Entity E=e.getEntity();
 					    bannedUUID.add(E.getUniqueId().toString());
 					    try{
-					        for(Entity P:E.getPassengers())bannedUUID.add(P.getUniqueId().toString());
+							for(Entity P:E.getPassengers()) bannedUUID.add(P.getUniqueId().toString());
                         }catch(Throwable Ex){
-                            //noinspection deprecation
-                            Entity P=E.getPassenger();
+                            @SuppressWarnings("deprecation")
+							Entity P=E.getPassenger();
                             if(P!=null)bannedUUID.add(P.getUniqueId().toString());
                         }
                     }
@@ -139,6 +144,7 @@ public class MobMoney extends JavaPlugin{
 		//Creando configuración
         if(!config.contains("notificationsInActionBar"))config.set("notificationsInActionBar",false);
 		if(!config.contains("disabledWorlds"))config.set("disabledWorlds",new String[0]);
+		if(!config.contains("debug"))config.set("debug", false);
 		if(!config.contains("Language"))config.set("Language","English");
 		if(!config.contains("DisableCreative"))config.set("DisableCreative",true);
 		if(!config.contains("Timer.enable"))config.set("Timer.enable",false);
@@ -296,15 +302,20 @@ public class MobMoney extends JavaPlugin{
 			fidioma=new File(idiomas+"/English.yml");
 		}User.limpiarUsuarios();
 		Mob.limpiarMobs();
-		for(EntityType et:EntityType.values()){
-			String name=et.name().toLowerCase();
-			new Mob(et,config.getDouble("Entity.economy."+name),config.getString("Entity.name."+name));
-		}disableCreative=config.getBoolean("DisableCreative");
+		ConfigurationSection entities = config.getConfigurationSection("Entity.economy");
+		for(String key:entities.getKeys(false)) {
+			double price = entities.getDouble(key);
+			String name = config.getString("Entity.name."+key, key);
+			new Mob(key, price, name);
+		}
+		disableCreative=config.getBoolean("DisableCreative");
 		enableTimer=config.getBoolean("Timer.enable");
 		if(enableTimer){
 			Timer.TIEMPO=(int)(config.getDouble("Timer.resetTimeInSeconds")*1000);
 			Timer.KILLS=config.getInt("Timer.maxKills");
-		}spawnban.clear();
+		}
+		debug = config.getBoolean("debug", false);
+		spawnban.clear();
 		for(SpawnReason sr:SpawnReason.values())if(config.getBoolean("BlockPayEntitiesSpawnedBy."+sr.name()))spawnban.add(sr);
 		
 		//Cargando idioma
