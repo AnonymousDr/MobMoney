@@ -9,6 +9,7 @@ import java.util.List;
 import com.anderhurtado.spigot.mobmoney.objetos.*;
 import com.anderhurtado.spigot.mobmoney.objetos.Mob;
 import com.anderhurtado.spigot.mobmoney.util.MetaEntityManager;
+import com.anderhurtado.spigot.mobmoney.util.UserCache;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -56,11 +57,11 @@ public class MobMoney extends JavaPlugin{
 			Bukkit.getPluginManager().registerEvents(new Listener(){
 				@EventHandler
 				public void alEntrar(PlayerJoinEvent e){
-					new User(e.getPlayer().getName());
+					new User(e.getPlayer().getUniqueId());
 				}
 				@EventHandler
 				public void alSalir(PlayerQuitEvent e){
-					User u=User.getUser(e.getPlayer().getName());
+					User.getUser(e.getPlayer().getUniqueId()).disconnect();
 				}
 				@EventHandler
 				public void alMorirENTIDAD(EntityDeathEvent e){
@@ -76,7 +77,7 @@ public class MobMoney extends JavaPlugin{
 					if(j==null)return;
 					if(!j.hasPermission("mobmoney.get"))return;
 					if(disableCreative&&j.getGameMode().equals(GameMode.CREATIVE))return;
-                    User u=User.getUser(j.getName());
+                    User u=User.getUser(j.getUniqueId());
 					if(bannedUUID.contains(m.getUniqueId().toString())){
 						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.entityBanned"),j);
 						return;
@@ -125,7 +126,7 @@ public class MobMoney extends JavaPlugin{
 			Bukkit.getScheduler().runTaskLater(this,new Runnable(){
 				@Override
 				public void run(){
-					for(Player j:Bukkit.getOnlinePlayers())new User(j.getName());
+					for(Player j:Bukkit.getOnlinePlayers())new User(j.getUniqueId());
 				}
 			},1);
 		}catch(Exception Ex){
@@ -342,6 +343,7 @@ public class MobMoney extends JavaPlugin{
 				Ex.printStackTrace();
 			}
 		}if(dailylimit!=null)guardarLimiteDiario();
+		UserCache.getInstance().save();
 	}
 
 	private void guardarLimiteDiario(){
@@ -436,7 +438,7 @@ public class MobMoney extends JavaPlugin{
 			}if(!(j instanceof Player)){
 				j.sendMessage(msg.get("Commands.onlyPlayers"));
 				return true;
-			}User u=User.getUser(j.getName());
+			}User u=User.getUser(((Player) j).getUniqueId());
 			if(u.getReceiveOnDeath()){
 				u.setReceiveOnDeath(false);
 				j.sendMessage(msg.get("Commands.Messages.disabledMessages"));

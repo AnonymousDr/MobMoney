@@ -1,14 +1,18 @@
 package com.anderhurtado.spigot.mobmoney.objetos;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
+import com.anderhurtado.spigot.mobmoney.util.UserCache;
 
 public class User{
-	public static final HashMap<String,User> users=new HashMap<String,User>();
-	public static User getUser(String s){
-	    User u=users.get(s);
-	    if(u==null)u=new User(s);
+
+	private static final UserCache USER_CACHE = UserCache.getInstance();
+	public static final HashMap<UUID,User> users=new HashMap<>();
+	public static User getUser(UUID uuid){
+	    User u=users.get(uuid);
+	    if(u==null)u=new User(uuid);
 		return u;
 	}
 
@@ -16,19 +20,21 @@ public class User{
 	    users.clear();
     }
 	
-	private boolean ReceiveOnDeath=true;
-	private final String nick;
+	private boolean receiveOnDeath;
+	public final UUID uuid;
 	private Timer timer;
 	
-	public User(String s){
-		users.put(s,this);
-		nick=s;
+	public User(UUID u){
+		users.put(u,this);
+		uuid=u;
+		receiveOnDeath = USER_CACHE.receivesMessagesOnKill(this);
 	}
 	public boolean getReceiveOnDeath(){
-		return ReceiveOnDeath;
+		return receiveOnDeath;
 	}
 	public void setReceiveOnDeath(boolean b){
-		ReceiveOnDeath=b;
+		receiveOnDeath=b;
+		USER_CACHE.setReceivingMessagesOnKill(this, receiveOnDeath);
 	}
 	public Timer getTimer(){
 		return timer;
@@ -40,6 +46,6 @@ public class User{
 		return (!MobMoney.enableTimer||(timer==null?new Timer(this):timer).addEntity());
 	}
 	public void disconnect(){
-		users.remove(nick);
+		users.remove(uuid);
 	}
 }
