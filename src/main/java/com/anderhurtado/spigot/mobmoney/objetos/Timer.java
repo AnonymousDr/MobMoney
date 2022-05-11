@@ -1,8 +1,5 @@
 package com.anderhurtado.spigot.mobmoney.objetos;
 
-import org.bukkit.Bukkit;
-import com.anderhurtado.spigot.mobmoney.MobMoney;
-
 public class Timer{
 	public static int TIEMPO,KILLS;
 

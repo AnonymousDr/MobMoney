@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
+import org.bukkit.entity.Player;
 
 public class User{
 
@@ -23,7 +24,11 @@ public class User{
 	private boolean receiveOnDeath;
 	public final UUID uuid;
 	private Timer timer;
-	
+
+	public User(Player p) {
+		this(p.getUniqueId());
+	}
+
 	public User(UUID u){
 		users.put(u,this);
 		uuid=u;

@@ -1,13 +1,11 @@
 package com.anderhurtado.spigot.mobmoney;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.anderhurtado.spigot.mobmoney.objetos.*;
 import com.anderhurtado.spigot.mobmoney.objetos.Mob;
+import com.anderhurtado.spigot.mobmoney.objetos.Timer;
 import com.anderhurtado.spigot.mobmoney.util.MetaEntityManager;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
 import org.bukkit.Bukkit;
@@ -40,8 +38,7 @@ public class MobMoney extends JavaPlugin{
 	public static MobMoney instancia;
     public static Economy eco;
 	static boolean action;
-	static int day;
-	public static HashMap<String,Double> dailylimit;
+	public static DailyLimit dailylimit;
 	public static double dailylimitLimit;
 
     public void onEnable(){
@@ -81,16 +78,16 @@ public class MobMoney extends JavaPlugin{
 					if(bannedUUID.contains(m.getUniqueId().toString())){
 						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.entityBanned"),j);
 						return;
-					}String uuid=j.getUniqueId().toString();
+					}
+					UUID uuid=j.getUniqueId();
 					if(!u.canGiveReward()){
 						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.MaxKillsReached"),j);
 						return;
 					}if(dailylimit!=null){
-                        if(!dailylimit.containsKey(uuid))dailylimit.put(uuid,0d);
-					    if(dailylimit.get(uuid)>=dailylimitLimit){
+					    if(dailylimit.getCount(uuid)>=dailylimitLimit){
                             if(u.getReceiveOnDeath())sendMessage(msg.get("Events.dailyLimitReached").replace("%limit%",String.valueOf(dailylimitLimit)),j);
                             return;
-                        }dailylimit.replace(uuid,dailylimit.get(uuid)+mob.getPrice());
+                        } else dailylimit.addCount(uuid, mob.getPrice());
                     }
 					if(u.getReceiveOnDeath())sendMessage(msg.get("Events.hunt").replace("%entity%",mob.getName()).replace("%reward%",String.valueOf(mob.getPrice())),j);
                     eco.depositPlayer(j,mob.getPrice());
@@ -123,12 +120,7 @@ public class MobMoney extends JavaPlugin{
 				if(bans.contains(UUID))bannedUUID.add(UUID);
 			}
 			
-			Bukkit.getScheduler().runTaskLater(this,new Runnable(){
-				@Override
-				public void run(){
-					for(Player j:Bukkit.getOnlinePlayers())new User(j.getUniqueId());
-				}
-			},1);
+			Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(User::new),1);
 		}catch(Exception Ex){
 			Ex.printStackTrace();
 			Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"Plugin disabled!");
@@ -281,19 +273,9 @@ public class MobMoney extends JavaPlugin{
 		disabledWorlds=config.getStringList("disabledWorlds");
 		action=config.getBoolean("notificationsInActionBar");
 		if(config.getBoolean("dailylimit.enabled")){
-		    if(dailylimit!=null)guardarLimiteDiario();
-		    day=Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+		    if(dailylimit!=null) dailylimit.save();
             dailylimitLimit=config.getDouble("dailylimit.limit");
-            dailylimit=new HashMap<>();
-		    File dl=new File(cplugin+"/dailylimit.dat");
-		    FileConfiguration dyml=new YamlConfiguration();
-		    if(dl.exists()){
-		        dyml.load(dl);
-		        if(dyml.getInt("day")==day){
-		            ConfigurationSection cs=dyml.getConfigurationSection("users");
-		            if(cs!=null)for(String s:cs.getKeys(false))dailylimit.put(s,cs.getDouble(s));
-                }
-            }else dl.createNewFile();
+            dailylimit=DailyLimit.getInstance();
         }else dailylimit=null;
 		File fidioma=new File(idiomas+"/"+config.getString("Language")+".yml");
 		if(!fidioma.exists()){
@@ -323,12 +305,16 @@ public class MobMoney extends JavaPlugin{
 		FileConfiguration idioma=new YamlConfiguration();
 		idioma.load(fidioma);
 		msg.clear();
-		for(String v:idioma.getValues(true).keySet())msg.put(v,ChatColor.translateAlternateColorCodes('&',idioma.getString(v)));
+		String value;
+		for(String v:idioma.getValues(true).keySet()) {
+			value = idioma.getString(v);
+			if(value != null) msg.put(v,ChatColor.translateAlternateColorCodes('&', value));
+		}
 	}
 	
 	public void onDisable(){
 		if(!bannedUUID.isEmpty()){
-			List<String> bans=new ArrayList<String>();
+			List<String> bans=new ArrayList<>();
 			for(World w:Bukkit.getWorlds())for(Entity e:w.getEntities()){
 				String UUID=e.getUniqueId().toString();
 				if(bannedUUID.contains(UUID))bans.add(UUID);
@@ -342,24 +328,12 @@ public class MobMoney extends JavaPlugin{
 			}catch(Exception Ex){
 				Ex.printStackTrace();
 			}
-		}if(dailylimit!=null)guardarLimiteDiario();
+		}if(dailylimit!=null) dailylimit.save();
 		UserCache.getInstance().save();
 	}
 
-	private void guardarLimiteDiario(){
-        try{
-            File dl=new File(cplugin+"/dailylimit.dat");
-            if(!dl.exists())dl.createNewFile();
-            FileConfiguration yml=new YamlConfiguration();
-            setDefault(yml,"day",day);
-            for(String s:dailylimit.keySet())setDefault(yml,"users."+s,dailylimit.get(s));
-            yml.save(dl);
-        }catch(Exception Ex){
-            Ex.printStackTrace();
-        }
-    }
-	
-	public boolean onCommand(CommandSender j,Command cmd,String label,String[] args){
+	@Override
+	public boolean onCommand(CommandSender j, Command cmd, String label, String[] args){
 		if(args.length==0){
 			boolean permiso=false;
 			if(j.hasPermission("mobmoney.reload")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.reload"));
