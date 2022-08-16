@@ -73,7 +73,7 @@ public class MobMoney extends JavaPlugin{
 					Player j=m.getKiller();
 					if(j==null)return;
 					if(!j.hasPermission("mobmoney.get"))return;
-					if(disableCreative&&j.getGameMode().equals(GameMode.CREATIVE))return;
+					if(disableCreative&&GameMode.CREATIVE.equals(j.getGameMode()))return;
                     User u=User.getUser(j.getUniqueId());
 					if(bannedUUID.contains(m.getUniqueId().toString())){
 						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.entityBanned"),j);
