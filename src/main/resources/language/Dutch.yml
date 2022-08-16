@@ -1,0 +1,28 @@
+Events:
+  hunt: '&aJe hebt een &b%entity%&e vermoord en daarvoor heb je %reward%&e punt(en)
+    gekregen!'
+  MaxKillsReached: '&cYou reached the limit of entities of you can kill!'
+  entityBanned: '&cDeze mob komt van een spawner! Voor mobs uit spawners staat MobMoney
+    &c&luitgeschakeld&e om puntenfarms te voorkomen.'
+  dailyLimitReached: '&cJe hebt het maximum aantal punten per dag bereikt! (%limit%$)'
+Commands:
+  noPermission: '&cSorry, maar je hebt geen permissies om dit commando uit te voeren.'
+  onlyPlayers: '&cDit commando bestaat niet. Type /help voor een lijst met alle commandos.'
+  invalidArguments: '&cJe argumenten kloppen niet! Probeer het opnieuw.'
+  arguments:
+    reload: herlaad
+    disableWorld: disableworld
+    enableWorld: enableworld
+    toggle: toggle
+  Messages:
+    enabledMessages: '&aJe hebt berichten voor MobMoney &a&lingeschakeld&e.'
+    disabledMessages: '&6Je hebt berichten voor MobMoney &c&luitgeschakeld&e.'
+    addWorld: '&aWorld enabled!'
+    delWorld: '&aWorld disabled!'
+    CurrentlyWorldAdded: '&6The world was already in the list!'
+    WorldNotFinded: '&cThe world has not been found!'
+  Use:
+    reload: '&aHerlaad de configuratie: &e/mobmoney herlaad'
+    enableWorld: '&aSchakel een wereld in: &e/mobmoney enableworld <wereld>'
+    disableWorld: '&aSchakel een wereld uit: &e/mobmoney disableworld <wereld>'
+    toggle: '&aSchakel mob-killberichten in/uit: &e/mobmoney toggle'

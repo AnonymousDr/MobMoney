@@ -1,0 +1,27 @@
+Events:
+  hunt: '&a¡Has cazado un &b%entity%&a y has sido recompensado con %reward%&a$!'
+  MaxKillsReached: '&c¡Has alcanzado el límite de entidades que puedes matar!'
+  entityBanned: '&cLa entidad que has cazado se encuentra baneada.'
+  dailyLimitReached: '&cHas alcanzado el límite de dinero que puedes obtener hoy.
+    (%limit%$)'
+Commands:
+  noPermission: '&cNo tienes suficientes privilegios para ello.'
+  onlyPlayers: '&cEste comando solo puede ser ejecutado por jugadores dentro del juego.'
+  invalidArguments: '&cArgumentos inválidos.'
+  arguments:
+    reload: recargar
+    disableWorld: deshabilitarmundo
+    enableWorld: habilitarmundo
+    toggle: toggle
+  Messages:
+    enabledMessages: '&a¡Ahora recibirás mensajes!'
+    disabledMessages: '&6¡Ya no recibirás mensajes!'
+    addWorld: '&a¡Mundo habilitado!'
+    delWorld: '&a¡Mundo deshabilitado!'
+    CurrentlyWorldAdded: '&6¡El mundo ya estaba en la lista!'
+    WorldNotFinded: '&c¡No se ha encontrado el mundo!'
+  Use:
+    reload: '&aRecargar la configuración: &b/mobmoney recargar'
+    enableWorld: '&aHabilitar mundo: &b/mobmoney habilitarmundo <Mundo>'
+    disableWorld: '&aDeshabilitar mundo: &b/mobmoney deshabilitarmundo <Mundo>'
+    toggle: '&aDeshabilitar mensajes: &b/mobmoney toggle'
