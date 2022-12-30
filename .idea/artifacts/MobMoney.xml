@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MobMoney">
+    <output-path>$USER_HOME$/Desktop/Server/plugins</output-path>
+    <root id="archive" name="MobMoney.jar">
+      <element id="module-output" name="MobMoney" />
+    </root>
+  </artifact>
+</component>

@@ -6,11 +6,11 @@ import java.util.*;
 import com.anderhurtado.spigot.mobmoney.objetos.*;
 import com.anderhurtado.spigot.mobmoney.objetos.Mob;
 import com.anderhurtado.spigot.mobmoney.objetos.Timer;
-import com.anderhurtado.spigot.mobmoney.util.MetaEntityManager;
+import com.anderhurtado.spigot.mobmoney.util.EventListener;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
+import com.anderhurtado.spigot.mobmoney.util.softdepend.CrackShotConnector;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,13 +18,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.milkbowl.vault.economy.Economy;
 
@@ -35,79 +29,31 @@ public class MobMoney extends JavaPlugin{
 	public static List<String> disabledWorlds;
 	public static boolean disableCreative,enableTimer, debug;
 	public static File cplugin;
-	public static MobMoney instancia;
+	public static MobMoney instance;
     public static Economy eco;
 	static boolean action;
 	public static DailyLimit dailylimit;
 	public static double dailylimitLimit;
+	public static CrackShotConnector crackShotConnector;
 
     public void onEnable(){
 		try{
-			instancia=this;
+			instance =this;
 			cplugin=getDataFolder();
 			if(!cplugin.exists())cplugin.mkdir();
 			setConfig();
+			//Cargando dependencias
 			eco=Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
+			if(Bukkit.getPluginManager().isPluginEnabled("CrackShot")) try {
+				crackShotConnector = new CrackShotConnector();
+			} catch (Throwable t) {
+				t.printStackTrace();
+				Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
+			}
             Metrics metrics=new Metrics(this);
 			String s=Bukkit.getVersion().split("MC: ")[1].replace(")","");
 			if(!(s.startsWith("1")&&Integer.parseInt(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new DrownedProtection(),this);
-			Bukkit.getPluginManager().registerEvents(new Listener(){
-				@EventHandler
-				public void alEntrar(PlayerJoinEvent e){
-					new User(e.getPlayer().getUniqueId());
-				}
-				@EventHandler
-				public void alSalir(PlayerQuitEvent e){
-					User.getUser(e.getPlayer().getUniqueId()).disconnect();
-				}
-				@EventHandler
-				public void alMorirENTIDAD(EntityDeathEvent e){
-					LivingEntity m=e.getEntity();
-					String entityType;
-					if(m.getType().equals(EntityType.UNKNOWN)) entityType = MetaEntityManager.getEntityType(m);
-					else entityType = m.getType().toString();
-					if(debug) System.out.println("[MOBMONEY DEBUG] Entity killed: "+entityType);
-					if(disabledWorlds.contains(m.getWorld().getName()))return;
-					Mob mob=Mob.getEntidad(entityType);
-					if(mob==null || mob.getPrice() == 0)return;
-					Player j=m.getKiller();
-					if(j==null)return;
-					if(!j.hasPermission("mobmoney.get"))return;
-					if(disableCreative&&GameMode.CREATIVE.equals(j.getGameMode()))return;
-                    User u=User.getUser(j.getUniqueId());
-					if(bannedUUID.contains(m.getUniqueId().toString())){
-						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.entityBanned"),j);
-						return;
-					}
-					UUID uuid=j.getUniqueId();
-					if(!u.canGiveReward()){
-						if(u.getReceiveOnDeath())sendMessage(msg.get("Events.MaxKillsReached"),j);
-						return;
-					}if(dailylimit!=null){
-					    if(dailylimit.getCount(uuid)>=dailylimitLimit){
-                            if(u.getReceiveOnDeath())sendMessage(msg.get("Events.dailyLimitReached").replace("%limit%",String.valueOf(dailylimitLimit)),j);
-                            return;
-                        } else dailylimit.addCount(uuid, mob.getPrice());
-                    }
-					if(u.getReceiveOnDeath())sendMessage(msg.get("Events.hunt").replace("%entity%",mob.getName()).replace("%reward%",String.valueOf(mob.getPrice())),j);
-                    eco.depositPlayer(j,mob.getPrice());
-				}
-
-				@EventHandler
-				public void alSpawnear(CreatureSpawnEvent e){
-					if(spawnban.contains(e.getSpawnReason())){
-					    Entity E=e.getEntity();
-					    bannedUUID.add(E.getUniqueId().toString());
-					    try{
-							for(Entity P:E.getPassengers()) bannedUUID.add(P.getUniqueId().toString());
-                        }catch(Throwable Ex){
-                            @SuppressWarnings("deprecation")
-							Entity P=E.getPassenger();
-                            if(P!=null)bannedUUID.add(P.getUniqueId().toString());
-                        }
-                    }
-				}
-			},this);
+			Bukkit.getPluginManager().registerEvents(new EventListener(),this);
 			
 			//Cargando entiades baneadas
 			File f=new File(cplugin+"/entitybans.dat");
