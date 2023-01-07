@@ -1,4 +1,4 @@
-package com.anderhurtado.spigot.mobmoney.objetos;
+package com.anderhurtado.spigot.mobmoney.objets;
 
 public class Timer{
 	public static int TIEMPO,KILLS;

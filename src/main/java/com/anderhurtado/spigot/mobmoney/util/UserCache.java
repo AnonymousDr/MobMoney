@@ -1,7 +1,7 @@
 package com.anderhurtado.spigot.mobmoney.util;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
-import com.anderhurtado.spigot.mobmoney.objetos.User;
+import com.anderhurtado.spigot.mobmoney.objets.User;
 
 import java.io.*;
 

@@ -1,4 +1,4 @@
-package com.anderhurtado.spigot.mobmoney.objetos;
+package com.anderhurtado.spigot.mobmoney.objets;
 
 import java.lang.reflect.*;
 import java.util.function.BiConsumer;

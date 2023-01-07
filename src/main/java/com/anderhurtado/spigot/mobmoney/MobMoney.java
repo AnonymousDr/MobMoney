@@ -3,9 +3,9 @@ package com.anderhurtado.spigot.mobmoney;
 import java.io.File;
 import java.util.*;
 
-import com.anderhurtado.spigot.mobmoney.objetos.*;
-import com.anderhurtado.spigot.mobmoney.objetos.Mob;
-import com.anderhurtado.spigot.mobmoney.objetos.Timer;
+import com.anderhurtado.spigot.mobmoney.objets.HotbarMessager;
+import com.anderhurtado.spigot.mobmoney.objets.Mob;
+import com.anderhurtado.spigot.mobmoney.objets.Timer;
 import com.anderhurtado.spigot.mobmoney.util.EventListener;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.CrackShotConnector;
@@ -32,7 +32,7 @@ public class MobMoney extends JavaPlugin{
 	public static MobMoney instance;
     public static Economy eco;
 	static boolean action;
-	public static DailyLimit dailylimit;
+	public static com.anderhurtado.spigot.mobmoney.objets.DailyLimit dailylimit;
 	public static double dailylimitLimit;
 	public static CrackShotConnector crackShotConnector;
 
@@ -50,9 +50,9 @@ public class MobMoney extends JavaPlugin{
 				t.printStackTrace();
 				Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
 			}
-            Metrics metrics=new Metrics(this);
+            com.anderhurtado.spigot.mobmoney.objets.Metrics metrics=new com.anderhurtado.spigot.mobmoney.objets.Metrics(this);
 			String s=Bukkit.getVersion().split("MC: ")[1].replace(")","");
-			if(!(s.startsWith("1")&&Integer.parseInt(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new DrownedProtection(),this);
+			if(!(s.startsWith("1")&&Integer.parseInt(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new com.anderhurtado.spigot.mobmoney.objets.DrownedProtection(),this);
 			Bukkit.getPluginManager().registerEvents(new EventListener(),this);
 			
 			//Cargando entiades baneadas
@@ -66,7 +66,7 @@ public class MobMoney extends JavaPlugin{
 				if(bans.contains(UUID))bannedUUID.add(UUID);
 			}
 			
-			Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(User::new),1);
+			Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(com.anderhurtado.spigot.mobmoney.objets.User::new),1);
 		}catch(Exception Ex){
 			Ex.printStackTrace();
 			Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"Plugin disabled!");
@@ -221,7 +221,7 @@ public class MobMoney extends JavaPlugin{
 		if(config.getBoolean("dailylimit.enabled")){
 		    if(dailylimit!=null) dailylimit.save();
             dailylimitLimit=config.getDouble("dailylimit.limit");
-            dailylimit=DailyLimit.getInstance();
+            dailylimit= com.anderhurtado.spigot.mobmoney.objets.DailyLimit.getInstance();
         }else dailylimit=null;
 		File fidioma=new File(idiomas+"/"+config.getString("Language")+".yml");
 		if(!fidioma.exists()){
@@ -229,7 +229,8 @@ public class MobMoney extends JavaPlugin{
 			config.set("Language","English");
 			config.save(fConfig);
 			fidioma=new File(idiomas+"/English.yml");
-		}User.limpiarUsuarios();
+		}
+		com.anderhurtado.spigot.mobmoney.objets.User.limpiarUsuarios();
 		Mob.limpiarMobs();
 		ConfigurationSection entities = config.getConfigurationSection("Entity.economy");
 		for(String key:entities.getKeys(false)) {
@@ -358,7 +359,8 @@ public class MobMoney extends JavaPlugin{
 			}if(!(j instanceof Player)){
 				j.sendMessage(msg.get("Commands.onlyPlayers"));
 				return true;
-			}User u=User.getUser(((Player) j).getUniqueId());
+			}
+			com.anderhurtado.spigot.mobmoney.objets.User u= com.anderhurtado.spigot.mobmoney.objets.User.getUser(((Player) j).getUniqueId());
 			if(u.getReceiveOnDeath()){
 				u.setReceiveOnDeath(false);
 				j.sendMessage(msg.get("Commands.Messages.disabledMessages"));

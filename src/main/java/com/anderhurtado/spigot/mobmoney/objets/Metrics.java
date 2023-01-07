@@ -1,4 +1,4 @@
-package com.anderhurtado.spigot.mobmoney.objetos;
+package com.anderhurtado.spigot.mobmoney.objets;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
