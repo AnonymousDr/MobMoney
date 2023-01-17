@@ -6,33 +6,33 @@ public class Mob{
 
 	private static final HashMap<String,Mob> mobs=new HashMap<>();
 
-	public static Mob getEntidad(String t){
+	public static Mob getEntity(String t){
 		return mobs.get(t.toLowerCase());
 	}
 
-	public static void limpiarMobs(){
+	public static void clearMobs(){
 	    mobs.clear();
     }
 	
 	private double price;
 	private String name;
 	
-	public Mob(String et,double precio,String nombre){
-		mobs.put(et.toLowerCase(),this);
-		price=precio;
-		name=nombre;
+	public Mob(String entityType,double price,String name){
+		mobs.put(entityType.toLowerCase(),this);
+		this.price=price;
+		this.name=name;
 	}
 	
 	public double getPrice(){
 		return price;
 	}
-	public void setPrice(double precio){
-		price=precio;
+	public void setPrice(double price){
+		this.price=price;
 	}
 	public String getName(){
 		return name;
 	}
-	public void setName(String nombre){
-		name=nombre;
+	public void setName(String name){
+		this.name=name;
 	}
 }

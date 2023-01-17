@@ -34,22 +34,27 @@ public class User{
 		uuid=u;
 		receiveOnDeath = USER_CACHE.receivesMessagesOnKill(this);
 	}
+
 	public boolean getReceiveOnDeath(){
 		return receiveOnDeath;
 	}
+
 	public void setReceiveOnDeath(boolean b){
 		receiveOnDeath=b;
 		USER_CACHE.setReceivingMessagesOnKill(this, receiveOnDeath);
 	}
+
 	public Timer getTimer(){
 		return timer;
 	}
 	protected void setTimer(Timer t){
 		timer=t;
 	}
+
 	public boolean canGiveReward(){
 		return (!MobMoney.enableTimer||(timer==null?new Timer(this):timer).addEntity());
 	}
+
 	public void disconnect(){
 		users.remove(uuid);
 	}

@@ -1,7 +1,6 @@
 package com.anderhurtado.spigot.mobmoney.util.softdepend;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
-import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 
 public class CrackShotConnector implements Listener {
 
-    private HashMap<Entity, Player> attacks = new HashMap<>(); // Victim, damager
+    private final HashMap<Entity, Player> attacks = new HashMap<>(); // Victim, damager
 
     public CrackShotConnector() {
         Bukkit.getPluginManager().registerEvents(this, MobMoney.instance);

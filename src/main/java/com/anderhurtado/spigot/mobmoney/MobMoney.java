@@ -92,9 +92,9 @@ public class MobMoney extends JavaPlugin{
 		if(!config.contains("dailylimit.enabled"))config.set("dailylimit.enabled",false);
 		if(!config.contains("dailylimit.limit"))config.set("dailylimit.limit",300);
 		for(EntityType et:EntityType.values()){
-			if(!(et.isSpawnable()&&et.isAlive()))continue;
+			if(!(et.isSpawnable()&&et.isAlive()&&et!=EntityType.PLAYER)) continue;
 			String name=et.name().toLowerCase();
-			if(!config.contains("Entity.economy."+name))config.set("Entity.economy."+name,1d);
+			if(!config.contains("Entity.economy."+name))config.set("Entity.economy."+name, 0d);
 			if(!config.contains("Entity.name."+name))config.set("Entity.name."+name,name);
 		}for(SpawnReason sr:SpawnReason.values())if(!config.contains("BlockPayEntitiesSpawnedBy."+sr.name()))config.set("BlockPayEntitiesSpawnedBy."+sr.name(),false);
 		config.save(fConfig);
@@ -231,7 +231,7 @@ public class MobMoney extends JavaPlugin{
 			fidioma=new File(idiomas+"/English.yml");
 		}
 		com.anderhurtado.spigot.mobmoney.objets.User.limpiarUsuarios();
-		Mob.limpiarMobs();
+		Mob.clearMobs();
 		ConfigurationSection entities = config.getConfigurationSection("Entity.economy");
 		for(String key:entities.getKeys(false)) {
 			double price = entities.getDouble(key);
