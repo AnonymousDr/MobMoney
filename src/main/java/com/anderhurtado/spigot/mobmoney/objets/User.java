@@ -5,12 +5,17 @@ import java.util.UUID;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class User{
 
 	private static final UserCache USER_CACHE = UserCache.getInstance();
 	public static final HashMap<UUID,User> users=new HashMap<>();
+
+	private final double multiplicator;
 	public static User getUser(UUID uuid){
 	    User u=users.get(uuid);
 	    if(u==null)u=new User(uuid);
@@ -33,6 +38,30 @@ public class User{
 		users.put(u,this);
 		uuid=u;
 		receiveOnDeath = USER_CACHE.receivesMessagesOnKill(this);
+		multiplicator = calculateMultiplicator();
+	}
+
+	public double getMultiplicator() {
+		return multiplicator;
+	}
+
+	private double calculateMultiplicator() {
+		Player p = Bukkit.getPlayer(uuid);
+		double multiplicator = 1;
+		if(p != null) {
+			String permission;
+			for(PermissionAttachmentInfo perm:p.getEffectivePermissions()) {
+				permission = perm.getPermission();
+				if(permission.startsWith("mobmoney.multiplicator.")) {
+					permission = permission.substring(23);
+					try{
+						if(multiplicator == 1) multiplicator = Double.parseDouble(permission);
+						else multiplicator = Math.max(multiplicator, Double.parseDouble(permission));
+					} catch (Exception Ex) {}
+				}
+			}
+		}
+		return multiplicator;
 	}
 
 	public boolean getReceiveOnDeath(){

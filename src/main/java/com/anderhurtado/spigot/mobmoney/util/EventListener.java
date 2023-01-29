@@ -1,11 +1,12 @@
 package com.anderhurtado.spigot.mobmoney.util;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
-import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilled;
+import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.User;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -20,7 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.UUID;
 
 import static com.anderhurtado.spigot.mobmoney.MobMoney.*;
-import static com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilled.CancelReason.PLAYER_DAILY_LIMIT_REACHED;
+import static com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent.CancelReason.PLAYER_DAILY_LIMIT_REACHED;
 
 public class EventListener implements Listener {
     @EventHandler
@@ -41,11 +42,11 @@ public class EventListener implements Listener {
                 if(j == null) return;
             } else return;
         }
-        AsyncMobMoneyEntityKilled event = new AsyncMobMoneyEntityKilled(j, m, 0);
+        AsyncMobMoneyEntityKilledEvent event = new AsyncMobMoneyEntityKilledEvent(j, m, 0);
         Bukkit.getScheduler().runTaskAsynchronously(instance, ()->callEvent(event));
     }
 
-    private void callEvent(AsyncMobMoneyEntityKilled e) {
+    private void callEvent(AsyncMobMoneyEntityKilledEvent e) {
         if(Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(instance, ()->callEvent(e));
             return;
@@ -59,23 +60,32 @@ public class EventListener implements Listener {
         Mob mob=Mob.getEntity(entityType);
         UUID uuid=j.getUniqueId();
         User u=User.getUser(uuid);
+        if(affectMultiplierOnPlayers || e.getKilledEntity().getType() != EntityType.PLAYER) e.setMultiplicator(u.getMultiplicator());
+        else e.setMultiplicator(1);
 
         if(disabledWorlds.contains(m.getWorld().getName())) {
-            e.cancel(AsyncMobMoneyEntityKilled.CancelReason.DISABLED_WORLD);
+            e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_WORLD);
         }else if(mob == null) {
-            e.cancel(AsyncMobMoneyEntityKilled.CancelReason.UNREGISTERED_ENTITY);
+            e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.UNREGISTERED_ENTITY);
         }else {
-            e.setReward(mob.getPrice());
-            if(mob.getPrice() == 0) {
-                e.cancel(AsyncMobMoneyEntityKilled.CancelReason.DISABLED_ENTITY);
+            if(e.getKilledEntity() instanceof OfflinePlayer && withdrawFromPlayers) {
+                double withdraw = mob.getPrice();
+                withdraw = Math.max(Math.min(withdraw, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
+                e.setWithdrawFromEntity(withdraw);
+                e.setReward(withdraw);
+            }
+            else e.setReward(mob.getPrice());
+            System.out.println(e.getReward());
+            if(e.getReward() == 0d) {
+                e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_ENTITY);
             }else if(!j.hasPermission("mobmoney.get")) {
-                e.cancel(AsyncMobMoneyEntityKilled.CancelReason.PLAYER_WITH_NO_PRIVILEGES);
+                e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.PLAYER_WITH_NO_PRIVILEGES);
             }else if(disableCreative&& GameMode.CREATIVE.equals(j.getGameMode())) {
-                e.cancel(AsyncMobMoneyEntityKilled.CancelReason.CREATIVE);
+                e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.CREATIVE);
             }else if(bannedUUID.contains(m.getUniqueId().toString())){
-                e.cancel(AsyncMobMoneyEntityKilled.CancelReason.BANNED_ENTITY);
+                e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.BANNED_ENTITY);
             }else if(!u.canGiveReward()){
-                e.cancel(AsyncMobMoneyEntityKilled.CancelReason.PLAYER_MAX_KILLS_REACHED);
+                e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.PLAYER_MAX_KILLS_REACHED);
             }else if(dailylimit!=null && dailylimit.getCount(uuid)>=dailylimitLimit){
                 e.cancel(PLAYER_DAILY_LIMIT_REACHED);
             }
@@ -96,14 +106,24 @@ public class EventListener implements Listener {
                     break;
             }
         } else {
-            if(dailylimit != null) dailylimit.addCount(uuid, e.getReward());
+            System.out.println(e.getMultiplicator());
+            double reward = Math.floor(e.getReward() * e.getMultiplicator() * 100d)/100d;
+            if(dailylimit != null) dailylimit.addCount(uuid, reward);
+            if(e.getKilledEntity() instanceof OfflinePlayer && e.getWithdrawFromEntity() != 0) {
+                double withdraw = e.getWithdrawFromEntity();
+                if(affectMultiplierOnPlayers) withdraw *= e.getMultiplicator();
+                withdraw = Math.max(Math.min(withdraw, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
+                sendMessage(msg.get("Events.withdrawnByKill").replace("%player%", j.getDisplayName()).replace("%reward%",eco.format(withdraw)), e.getKilledEntity());
+                eco.withdrawPlayer((OfflinePlayer)e.getKilledEntity(), withdraw);
+                if(e.getReward() == e.getWithdrawFromEntity()) reward = withdraw;
+            }
             if(u.getReceiveOnDeath()) {
                 String mobName;
                 if(mob == null) mobName = entityType;
                 else mobName = mob.getName();
-                sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",String.valueOf(e.getReward())),j);
+                sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",eco.format(reward)),j);
             }
-            eco.depositPlayer(j,e.getReward());
+            eco.depositPlayer(j,reward);
         }
     }
 

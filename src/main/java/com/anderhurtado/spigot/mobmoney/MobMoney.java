@@ -27,7 +27,7 @@ public class MobMoney extends JavaPlugin{
 	public static final List<SpawnReason> spawnban=new ArrayList<>();
 	public static final List<String> bannedUUID=new ArrayList<>();
 	public static List<String> disabledWorlds;
-	public static boolean disableCreative,enableTimer, debug;
+	public static boolean disableCreative,enableTimer, debug, withdrawFromPlayers, affectMultiplierOnPlayers;
 	public static File cplugin;
 	public static MobMoney instance;
     public static Economy eco;
@@ -91,9 +91,16 @@ public class MobMoney extends JavaPlugin{
 		if(!config.contains("Timer.resetTimeInSeconds"))config.set("Timer.resetTimeInSeconds",30);
 		if(!config.contains("dailylimit.enabled"))config.set("dailylimit.enabled",false);
 		if(!config.contains("dailylimit.limit"))config.set("dailylimit.limit",300);
+		String name;
 		for(EntityType et:EntityType.values()){
-			if(!(et.isSpawnable()&&et.isAlive()&&et!=EntityType.PLAYER)) continue;
-			String name=et.name().toLowerCase();
+			if(!(et.isSpawnable()&&et.isAlive())) {
+				if(et != EntityType.PLAYER) continue;
+				else{
+					if(!config.contains("Entity.params.player.withdrawKilled")) config.set("Entity.params.player.withdrawKilled", true);
+					if(!config.contains("Entity.params.player.affectMultiplier")) config.set("Entity.params.player.affectMultiplier", false);
+				}
+			}
+			name=et.name().toLowerCase();
 			if(!config.contains("Entity.economy."+name))config.set("Entity.economy."+name, 0d);
 			if(!config.contains("Entity.name."+name))config.set("Entity.name."+name,name);
 		}for(SpawnReason sr:SpawnReason.values())if(!config.contains("BlockPayEntitiesSpawnedBy."+sr.name()))config.set("BlockPayEntitiesSpawnedBy."+sr.name(),false);
@@ -112,6 +119,7 @@ public class MobMoney extends JavaPlugin{
 		setDefault(yml,"Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
 		setDefault(yml,"Events.entityBanned","&cThe entity you have hunted is banned.");
 		setDefault(yml,"Events.dailyLimitReached","&cYou reached the limit of money you can get today. (%limit%$)");
+		setDefault(yml,"Events.withdrawnByKill", "&cYou've been killed by &e%player%&c and you've lost &e%reward%&c.");
 		setDefault(yml,"Commands.noPermission","&cYou don't have enough privileges for it.");
 		setDefault(yml,"Commands.onlyPlayers","&cThis command only can be executed by in-game players.");
 		setDefault(yml,"Commands.invalidArguments","&cInvalid arguments.");
@@ -140,6 +148,7 @@ public class MobMoney extends JavaPlugin{
 		setDefault(yml,"Events.MaxKillsReached","&c¡Has alcanzado el límite de entidades que puedes matar!");
 		setDefault(yml,"Events.entityBanned","&cLa entidad que has cazado se encuentra baneada.");
         setDefault(yml,"Events.dailyLimitReached","&cHas alcanzado el límite de dinero que puedes obtener hoy. (%limit%$)");
+		setDefault(yml, "Events.withdrawnByKill", "&cTe ha asesinado &e%player%&c y has perdido &e%reward%&c.");
 		setDefault(yml,"Commands.noPermission","&cNo tienes suficientes privilegios para ello.");
 		setDefault(yml,"Commands.onlyPlayers","&cEste comando solo puede ser ejecutado por jugadores dentro del juego.");
 		setDefault(yml,"Commands.invalidArguments","&cArgumentos inválidos.");
@@ -168,6 +177,7 @@ public class MobMoney extends JavaPlugin{
 		setDefault(yml,"Events.MaxKillsReached","&cHas arribat al limit d'entitats que pots matar!");
 		setDefault(yml,"Events.entityBanned","&cL'entitat que has caçat es troba banejada.");
         setDefault(yml,"Events.dailyLimitReached","&cHas arribat al limit de diners que pots obtenir avui. (%limit%$)");
+		setDefault(yml, "Events.withdrawnByKill", "&cT'ha assasinnat &e%player%&c i has perdut &e%reward%&c.");
 		setDefault(yml,"Commands.noPermission","&cNo tens suficients privilegis per a això.");
 		setDefault(yml,"Commands.onlyPlayers","&cAquest comand solamment pot ser executat per jugadors dins del joc.");
 		setDefault(yml,"Commands.invalidArguments","&cArguments invàlids.");
@@ -196,6 +206,7 @@ public class MobMoney extends JavaPlugin{
         setDefault(yml,"Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
         setDefault(yml,"Events.entityBanned","&cDeze mob komt van een spawner! Voor mobs uit spawners staat MobMoney &c&luitgeschakeld&e om puntenfarms te voorkomen.");
         setDefault(yml,"Events.dailyLimitReached","&cJe hebt het maximum aantal punten per dag bereikt! (%limit%$)");
+		setDefault(yml, "Events.withdrawnByKill", "&e%player%&c heeft je vermoord en je bent &e%reward%&5 kwijt.");
         setDefault(yml,"Commands.noPermission","&cSorry, maar je hebt geen permissies om dit commando uit te voeren.");
         setDefault(yml,"Commands.onlyPlayers","&cDit commando bestaat niet. Type /help voor een lijst met alle commandos.");
         setDefault(yml,"Commands.invalidArguments","&cJe argumenten kloppen niet! Probeer het opnieuw.");
@@ -235,7 +246,7 @@ public class MobMoney extends JavaPlugin{
 		ConfigurationSection entities = config.getConfigurationSection("Entity.economy");
 		for(String key:entities.getKeys(false)) {
 			double price = entities.getDouble(key);
-			String name = config.getString("Entity.name."+key, key);
+			name = config.getString("Entity.name."+key, key);
 			new Mob(key, price, name);
 		}
 		disableCreative=config.getBoolean("DisableCreative");
@@ -247,7 +258,8 @@ public class MobMoney extends JavaPlugin{
 		debug = config.getBoolean("debug", false);
 		spawnban.clear();
 		for(SpawnReason sr:SpawnReason.values())if(config.getBoolean("BlockPayEntitiesSpawnedBy."+sr.name()))spawnban.add(sr);
-		
+		withdrawFromPlayers = config.getBoolean("Entity.params.player.withdrawKilled");
+		affectMultiplierOnPlayers = config.getBoolean("Entity.params.player.affectMultiplier");
 		//Cargando idioma
 		FileConfiguration idioma=new YamlConfiguration();
 		idioma.load(fidioma);
@@ -380,7 +392,7 @@ public class MobMoney extends JavaPlugin{
 	    if(!yml.contains(key))yml.set(key,value);
     }
 
-	public static void sendMessage(String msg,Player j){
+	public static void sendMessage(String msg,Entity j){
         if(action)try{
             HotbarMessager.sendHotBarMessage(j,msg);
         }catch(Exception Ex){

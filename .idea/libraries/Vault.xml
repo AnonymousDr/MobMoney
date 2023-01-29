@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Vault">
+    <CLASSES>
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/Vault.jar!/" />
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/CrackShot.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

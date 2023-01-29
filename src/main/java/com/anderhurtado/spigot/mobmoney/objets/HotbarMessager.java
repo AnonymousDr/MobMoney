@@ -5,11 +5,12 @@ import java.util.function.BiConsumer;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class HotbarMessager {
 
-    static BiConsumer<Player,String> alternativa;
+    static BiConsumer<Entity,String> alternativa;
 
     /**
      * These are the Class instances. Use these to get fields or methods for
@@ -78,7 +79,10 @@ public class HotbarMessager {
             CHATMESSAGE_CONSTRUCTOR = CHATMESSAGE.getConstructor(
                     String.class, Object[].class);
         }catch (Exception e) {
-            alternativa=(j,msg)->j.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText(msg));
+            alternativa=(j,msg)->{
+                if(j instanceof Player) ((Player)j).spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText(msg));
+                else j.sendMessage(msg);
+            };
         }
     }
 
@@ -88,7 +92,7 @@ public class HotbarMessager {
      * @param player
      * @param message
      */
-    public static void sendHotBarMessage(Player player, String message) {
+    public static void sendHotBarMessage(Entity player, String message) {
         if(alternativa!=null)alternativa.accept(player,message);
         else try {
             // This creates the IChatComponentBase instance
