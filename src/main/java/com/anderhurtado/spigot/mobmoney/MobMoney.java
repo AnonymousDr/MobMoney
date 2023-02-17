@@ -229,7 +229,7 @@ public class MobMoney extends JavaPlugin{
 
 		if(config.getBoolean("hooks.MyPets")) {
 			if(myPetsConnector == null) {
-				if(Bukkit.getPluginManager().isPluginEnabled("MyPets")) try {
+				if(Bukkit.getPluginManager().isPluginEnabled("MyPet")) try {
 					myPetsConnector = new MyPetsConnector();
 				} catch (Throwable t) {
 					t.printStackTrace();

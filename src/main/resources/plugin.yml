@@ -6,7 +6,7 @@ description: Kill mobs to get money.
 depend: [Vault]
 softdepend:
  - CrackShot
- - MyPets
+ - MyPet
 api-version: 1.13
 commands:
  mobmoney:
