@@ -2,6 +2,7 @@ package com.anderhurtado.spigot.mobmoney.util;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent;
+import com.anderhurtado.spigot.mobmoney.objets.ConditionalAction;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.User;
 import org.bukkit.Bukkit;
@@ -15,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -39,11 +41,20 @@ public class EventListener implements Listener {
         if(j==null) {
             if(MobMoney.crackShotConnector != null) {
                 j = MobMoney.crackShotConnector.getVictim(m);
-                if(j == null) return;
-            } else return;
+            }
+
+            if(j == null && myPetsConnector != null) {
+                j = myPetsConnector.getPetOwner(m.getKiller());
+            }
+            if(j == null) return;
         }
         AsyncMobMoneyEntityKilledEvent event = new AsyncMobMoneyEntityKilledEvent(j, m, 0);
         Bukkit.getScheduler().runTaskAsynchronously(instance, ()->callEvent(event));
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        User.getUser(e.getEntity().getUniqueId()).getStrikeSystem().resetStrikes();
     }
 
     private void callEvent(AsyncMobMoneyEntityKilledEvent e) {
@@ -75,7 +86,6 @@ public class EventListener implements Listener {
                 e.setReward(withdraw);
             }
             else e.setReward(mob.getPrice());
-            System.out.println(e.getReward());
             if(e.getReward() == 0d) {
                 e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_ENTITY);
             }else if(!j.hasPermission("mobmoney.get")) {
@@ -91,6 +101,10 @@ public class EventListener implements Listener {
             }
         }
 
+        //Handles economics and strike
+        int strikes = u.getStrikeSystem().addStrike(m.getType());
+        ConditionalAction.handleEconomics(e, strikes);
+        //Calls event
         Bukkit.getPluginManager().callEvent(e);
 
         if(e.isCancelled()) {
@@ -106,7 +120,6 @@ public class EventListener implements Listener {
                     break;
             }
         } else {
-            System.out.println(e.getMultiplicator());
             double reward = Math.floor(e.getReward() * e.getMultiplicator() * 100d)/100d;
             if(dailylimit != null) dailylimit.addCount(uuid, reward);
             if(e.getKilledEntity() instanceof OfflinePlayer && e.getWithdrawFromEntity() != 0) {
@@ -124,6 +137,9 @@ public class EventListener implements Listener {
                 sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",eco.format(reward)),j);
             }
             eco.depositPlayer(j,reward);
+
+            //Handles commands
+            ConditionalAction.handleCommands(e, strikes);
         }
     }
 

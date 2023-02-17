@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
+import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class User{
@@ -29,6 +29,7 @@ public class User{
 	private boolean receiveOnDeath;
 	public final UUID uuid;
 	private Timer timer;
+	private final StrikeSystem strikeSystem = new StrikeSystem();
 
 	public User(Player p) {
 		this(p.getUniqueId());
@@ -57,7 +58,7 @@ public class User{
 					try{
 						if(multiplicator == 1) multiplicator = Double.parseDouble(permission);
 						else multiplicator = Math.max(multiplicator, Double.parseDouble(permission));
-					} catch (Exception Ex) {}
+					} catch (Exception ignored) {}
 				}
 			}
 		}
@@ -82,6 +83,11 @@ public class User{
 
 	public boolean canGiveReward(){
 		return (!MobMoney.enableTimer||(timer==null?new Timer(this):timer).addEntity());
+	}
+
+	@NotNull
+	public StrikeSystem getStrikeSystem() {
+		return strikeSystem;
 	}
 
 	public void disconnect(){

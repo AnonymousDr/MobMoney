@@ -3,12 +3,13 @@ package com.anderhurtado.spigot.mobmoney;
 import java.io.File;
 import java.util.*;
 
-import com.anderhurtado.spigot.mobmoney.objets.HotbarMessager;
+import com.anderhurtado.spigot.mobmoney.objets.*;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.Timer;
 import com.anderhurtado.spigot.mobmoney.util.EventListener;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.CrackShotConnector;
+import com.anderhurtado.spigot.mobmoney.util.softdepend.MyPetsConnector;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -35,6 +36,7 @@ public class MobMoney extends JavaPlugin{
 	public static com.anderhurtado.spigot.mobmoney.objets.DailyLimit dailylimit;
 	public static double dailylimitLimit;
 	public static CrackShotConnector crackShotConnector;
+	public static MyPetsConnector myPetsConnector;
 
     public void onEnable(){
 		try{
@@ -42,15 +44,13 @@ public class MobMoney extends JavaPlugin{
 			cplugin=getDataFolder();
 			if(!cplugin.exists())cplugin.mkdir();
 			setConfig();
-			//Cargando dependencias
+			//Cargando necesarias
+			//noinspection ConstantConditions
 			eco=Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
-			if(Bukkit.getPluginManager().isPluginEnabled("CrackShot")) try {
-				crackShotConnector = new CrackShotConnector();
-			} catch (Throwable t) {
-				t.printStackTrace();
-				Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
-			}
+
             com.anderhurtado.spigot.mobmoney.objets.Metrics metrics=new com.anderhurtado.spigot.mobmoney.objets.Metrics(this);
+			metrics.addCustomChart(new Metrics.SimplePie("using_the_strikesystem", ()->ConditionalAction.getConditionals().isEmpty()?"No":"Yes"));
+
 			String s=Bukkit.getVersion().split("MC: ")[1].replace(")","");
 			if(!(s.startsWith("1")&&Integer.parseInt(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new com.anderhurtado.spigot.mobmoney.objets.DrownedProtection(),this);
 			Bukkit.getPluginManager().registerEvents(new EventListener(),this);
@@ -91,6 +91,8 @@ public class MobMoney extends JavaPlugin{
 		if(!config.contains("Timer.resetTimeInSeconds"))config.set("Timer.resetTimeInSeconds",30);
 		if(!config.contains("dailylimit.enabled"))config.set("dailylimit.enabled",false);
 		if(!config.contains("dailylimit.limit"))config.set("dailylimit.limit",300);
+		if(!config.contains("hooks.CrackShot"))config.set("hooks.CrackShot", true);
+		if(!config.contains("hooks.MyPets"))config.set("hooks.MyPets", true);
 		String name;
 		for(EntityType et:EntityType.values()){
 			if(!(et.isSpawnable()&&et.isAlive())) {
@@ -148,7 +150,7 @@ public class MobMoney extends JavaPlugin{
 		setDefault(yml,"Events.MaxKillsReached","&c¡Has alcanzado el límite de entidades que puedes matar!");
 		setDefault(yml,"Events.entityBanned","&cLa entidad que has cazado se encuentra baneada.");
         setDefault(yml,"Events.dailyLimitReached","&cHas alcanzado el límite de dinero que puedes obtener hoy. (%limit%$)");
-		setDefault(yml, "Events.withdrawnByKill", "&cTe ha asesinado &e%player%&c y has perdido &e%reward%&c.");
+		setDefault(yml,"Events.withdrawnByKill", "&cTe ha asesinado &e%player%&c y has perdido &e%reward%&c.");
 		setDefault(yml,"Commands.noPermission","&cNo tienes suficientes privilegios para ello.");
 		setDefault(yml,"Commands.onlyPlayers","&cEste comando solo puede ser ejecutado por jugadores dentro del juego.");
 		setDefault(yml,"Commands.invalidArguments","&cArgumentos inválidos.");
@@ -168,64 +170,6 @@ public class MobMoney extends JavaPlugin{
 		setDefault(yml,"Commands.Use.toggle","&aDeshabilitar mensajes: &b/mobmoney toggle");
 		yml.save(archivo);
 		
-		//Català
-		archivo=new File(idiomas+"/Catalan.yml");
-		yml=new YamlConfiguration();
-		if(!archivo.exists())archivo.createNewFile();
-		else yml.load(archivo);
-		setDefault(yml,"Events.hunt","&aHas caçat un &b%entity%&a i has sigut recompensat amb %reward%&a$!");
-		setDefault(yml,"Events.MaxKillsReached","&cHas arribat al limit d'entitats que pots matar!");
-		setDefault(yml,"Events.entityBanned","&cL'entitat que has caçat es troba banejada.");
-        setDefault(yml,"Events.dailyLimitReached","&cHas arribat al limit de diners que pots obtenir avui. (%limit%$)");
-		setDefault(yml, "Events.withdrawnByKill", "&cT'ha assasinnat &e%player%&c i has perdut &e%reward%&c.");
-		setDefault(yml,"Commands.noPermission","&cNo tens suficients privilegis per a això.");
-		setDefault(yml,"Commands.onlyPlayers","&cAquest comand solamment pot ser executat per jugadors dins del joc.");
-		setDefault(yml,"Commands.invalidArguments","&cArguments invàlids.");
-		setDefault(yml,"Commands.arguments.reload","recarregar");
-		setDefault(yml,"Commands.arguments.disableWorld","deshabilitarmon");
-		setDefault(yml,"Commands.arguments.enableWorld","habilitarmon");
-		setDefault(yml,"Commands.arguments.toggle","toggle");
-		setDefault(yml,"Commands.Messages.enabledMessages","&aAra rebràs missatges!");
-		setDefault(yml,"Commands.Messages.disabledMessages","&6Ja no rebràs missatges!");
-		setDefault(yml,"Commands.Messages.addWorld","&aMón habilitat!");
-		setDefault(yml,"Commands.Messages.delWorld","&aMón deshabilitat!");
-		setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6El món ja estava a la llista!");
-		setDefault(yml,"Commands.Messages.WorldNotFinded","&cNo s'ha trobat el món!");
-		setDefault(yml,"Commands.Use.reload","&aRecarregar la configuració: &b/mobmoney recarregar");
-		setDefault(yml,"Commands.Use.enableWorld","&aHabilitar món: &b/mobmoney habilitarmon <Món>");
-		setDefault(yml,"Commands.Use.disableWorld","&aDeshabilitar món: &b/mobmoney deshabilitarmon <Món>");
-		setDefault(yml,"Commands.Use.toggle","&aDeshabilitar messatges: &b/mobmoney toggle");
-		yml.save(archivo);
-
-        //Dutch
-        archivo=new File(idiomas+"/Dutch.yml");
-        yml=new YamlConfiguration();
-        if(!archivo.exists())archivo.createNewFile();
-        else yml.load(archivo);
-        setDefault(yml,"Events.hunt","&aJe hebt een &b%entity%&e vermoord en daarvoor heb je %reward%&e punt(en) gekregen!");
-        setDefault(yml,"Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
-        setDefault(yml,"Events.entityBanned","&cDeze mob komt van een spawner! Voor mobs uit spawners staat MobMoney &c&luitgeschakeld&e om puntenfarms te voorkomen.");
-        setDefault(yml,"Events.dailyLimitReached","&cJe hebt het maximum aantal punten per dag bereikt! (%limit%$)");
-		setDefault(yml, "Events.withdrawnByKill", "&e%player%&c heeft je vermoord en je bent &e%reward%&5 kwijt.");
-        setDefault(yml,"Commands.noPermission","&cSorry, maar je hebt geen permissies om dit commando uit te voeren.");
-        setDefault(yml,"Commands.onlyPlayers","&cDit commando bestaat niet. Type /help voor een lijst met alle commandos.");
-        setDefault(yml,"Commands.invalidArguments","&cJe argumenten kloppen niet! Probeer het opnieuw.");
-        setDefault(yml,"Commands.arguments.reload","herlaad");
-        setDefault(yml,"Commands.arguments.disableWorld","disableworld");
-        setDefault(yml,"Commands.arguments.enableWorld","enableworld");
-        setDefault(yml,"Commands.arguments.toggle","toggle");
-        setDefault(yml,"Commands.Messages.enabledMessages","&aJe hebt berichten voor MobMoney &a&lingeschakeld&e.");
-        setDefault(yml,"Commands.Messages.disabledMessages","&6Je hebt berichten voor MobMoney &c&luitgeschakeld&e.");
-        setDefault(yml,"Commands.Messages.addWorld","&aWorld enabled!");
-        setDefault(yml,"Commands.Messages.delWorld","&aWorld disabled!");
-        setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
-        setDefault(yml,"Commands.Messages.WorldNotFinded","&cThe world has not been found!");
-        setDefault(yml,"Commands.Use.reload","&aHerlaad de configuratie: &e/mobmoney herlaad");
-        setDefault(yml,"Commands.Use.enableWorld","&aSchakel een wereld in: &e/mobmoney enableworld <wereld>");
-        setDefault(yml,"Commands.Use.disableWorld","&aSchakel een wereld uit: &e/mobmoney disableworld <wereld>");
-        setDefault(yml,"Commands.Use.toggle","&aSchakel mob-killberichten in/uit: &e/mobmoney toggle");
-        yml.save(archivo);
-		
 		//Cargando configuración
 		disabledWorlds=config.getStringList("disabledWorlds");
 		action=config.getBoolean("notificationsInActionBar");
@@ -244,6 +188,7 @@ public class MobMoney extends JavaPlugin{
 		com.anderhurtado.spigot.mobmoney.objets.User.limpiarUsuarios();
 		Mob.clearMobs();
 		ConfigurationSection entities = config.getConfigurationSection("Entity.economy");
+		assert entities != null;
 		for(String key:entities.getKeys(false)) {
 			double price = entities.getDouble(key);
 			name = config.getString("Entity.name."+key, key);
@@ -268,6 +213,95 @@ public class MobMoney extends JavaPlugin{
 		for(String v:idioma.getValues(true).keySet()) {
 			value = idioma.getString(v);
 			if(value != null) msg.put(v,ChatColor.translateAlternateColorCodes('&', value));
+		}
+
+		//Loading soft depends
+		if(config.getBoolean("hooks.CrackShot")) {
+			if(crackShotConnector == null) {
+				if(Bukkit.getPluginManager().isPluginEnabled("CrackShot")) try {
+					crackShotConnector = new CrackShotConnector();
+				} catch (Throwable t) {
+					t.printStackTrace();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
+				}
+			}
+		} else crackShotConnector = null;
+
+		if(config.getBoolean("hooks.MyPets")) {
+			if(myPetsConnector == null) {
+				if(Bukkit.getPluginManager().isPluginEnabled("MyPets")) try {
+					myPetsConnector = new MyPetsConnector();
+				} catch (Throwable t) {
+					t.printStackTrace();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with MyPets! (Report this bug to MobMoney's developer to fix this)");
+				}
+			}
+		} else myPetsConnector = null;
+
+		ConditionalAction.resetConditionals();
+		File strikeSystemFile = new File(cplugin, "strikeSystem.yml");
+		if(strikeSystemFile.exists()) {
+			YamlConfiguration strikeSystem = new YamlConfiguration();
+			strikeSystem.load(strikeSystemFile);
+
+			EntityType et;
+			ConfigurationSection entitySection, conditionSection, commandsSection, commandSection;
+			int minRequired, maxRequired;
+			String baseFunction, multiplicatorFunction, command, executeCommandAs;
+			final List<PreconfiguredCommand> pcs = new ArrayList<>();
+			entityLoop:
+			for(String entityKey:strikeSystem.getKeys(false)) {
+				try{
+					switch (entityKey.toUpperCase()) {
+						case "ALL":
+							et = null;
+							break;
+						case "DEFAULT":
+							et = EntityType.UNKNOWN;
+							break;
+						default:
+							try{
+								et = EntityType.valueOf(entityKey.toUpperCase());
+							} catch (Exception Ex) {
+								continue entityLoop;
+							}
+					}
+					entitySection = strikeSystem.getConfigurationSection(entityKey);
+					assert entitySection != null;
+					if(entitySection.contains("maxTime")) StrikeSystem.setMaxTime(et, entitySection.getInt("maxTime"));
+					for(String condition:entitySection.getKeys(false)) {
+						if(condition.equalsIgnoreCase("maxTime")) continue;
+						try{
+							conditionSection = entitySection.getConfigurationSection(condition);
+							assert conditionSection != null;
+							minRequired = conditionSection.getInt("minRequired", 0);
+							maxRequired = conditionSection.getInt("maxRequired", Integer.MAX_VALUE);
+							baseFunction = conditionSection.getString("baseFunction");
+							multiplicatorFunction = conditionSection.getString("multiplicatorFunction");
+							pcs.clear();
+							commandsSection = conditionSection.getConfigurationSection("commands");
+							if(commandsSection != null) {
+								for(String commands:commandsSection.getKeys(false)) {
+									try{
+										commandSection = commandsSection.getConfigurationSection(commands);
+										if(commandSection == null) continue;
+										command = commandSection.getString("command");
+										executeCommandAs = commandSection.getString("executeAs");
+										pcs.add(new PreconfiguredCommand(command, PreconfiguredCommand.ExecutionType.getByName(executeCommandAs)));
+									} catch (Exception Ex) {
+										Ex.printStackTrace();
+									}
+								}
+							}
+							ConditionalAction.registerConditional(new ConditionalAction(minRequired, maxRequired, pcs.toArray(new PreconfiguredCommand[0]), multiplicatorFunction, baseFunction), et);
+						} catch (Exception Ex) {
+							Ex.printStackTrace();
+						}
+					}
+				} catch (Exception Ex) {
+					Ex.printStackTrace();
+				}
+			}
 		}
 	}
 	
