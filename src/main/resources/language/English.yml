@@ -1,0 +1,27 @@
+Events:
+  hunt: '&aYou''ve hunted a &b%entity%&a and you''ve been rewarded %reward%&a!'
+  MaxKillsReached: '&cYou reached the limit of entities of you can kill!'
+  entityBanned: '&cThe entity you have hunted is banned.'
+  dailyLimitReached: '&cYou reached the limit of money you can get today. (%limit%$)'
+  withdrawnByKill: '&cYou''ve been killed by &e%player%&c and you''ve lost &e%reward%&c.'
+Commands:
+  noPermission: '&cYou don''t have enough privileges for it.'
+  onlyPlayers: '&cThis command only can be executed by in-game players.'
+  invalidArguments: '&cInvalid arguments.'
+  arguments:
+    reload: reload
+    disableWorld: disableworld
+    enableWorld: enableworld
+    toggle: toggle
+  Messages:
+    enabledMessages: '&aNow you will receive messages!'
+    disabledMessages: '&6Now you will not receive messages!'
+    addWorld: '&aWorld enabled!'
+    delWorld: '&aWorld disabled!'
+    CurrentlyWorldAdded: '&6The world was already in the list!'
+    WorldNotFinded: '&cThe world has not been found!'
+  Use:
+    reload: '&aReload config: &b/mobmoney reload'
+    enableWorld: '&aEnable world: &b/mobmoney enableworld <World>'
+    disableWorld: '&aDisable world: &b/mobmoney disableworld <World>'
+    toggle: '&aToggle messages: &b/mobmoney toggle'

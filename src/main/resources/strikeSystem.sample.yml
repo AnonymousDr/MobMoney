@@ -1,3 +1,6 @@
+# With this file, you can configure your own Strike System. This allows you to give more money, and/or execute commands
+# when a condition is accomplished. In every line, you will find an explanation of what it does.
+# IMPORTANT: To make this to work, the file has to have the following name: strikeSystem.yml
 ALL: # Affects ALL entities, including specifically configured ones
   maxTime: 5000 # Time in miliseconds, 5000 is 5 seconds. When the user kills another entity in that amount of time, time gets renew'd
   messagingSample: # This name is just an example, you can rename 'messagingSample' however you'd like

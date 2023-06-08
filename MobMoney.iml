@@ -12,5 +12,6 @@
     <orderEntry type="library" name="spigot-1.14" level="project" />
     <orderEntry type="library" name="Vault" level="project" />
     <orderEntry type="library" name="net.objecthunter.exp4j" level="project" />
+    <orderEntry type="module" module-name="MMJava+" />
   </component>
 </module>

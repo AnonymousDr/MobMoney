@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="PluginsJava+">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Desktop/Server/plugins/MythicMobs-5.2.6.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Server/plugins/LevelledMobs-3.10.0 b752.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

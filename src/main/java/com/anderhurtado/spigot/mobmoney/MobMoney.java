@@ -9,7 +9,9 @@ import com.anderhurtado.spigot.mobmoney.objets.Timer;
 import com.anderhurtado.spigot.mobmoney.util.EventListener;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.CrackShotConnector;
+import com.anderhurtado.spigot.mobmoney.util.softdepend.LevelledMobsConnector;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.MyPetsConnector;
+import com.anderhurtado.spigot.mobmoney.util.softdepend.MythicMobsConnector;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -37,6 +39,8 @@ public class MobMoney extends JavaPlugin{
 	public static double dailylimitLimit;
 	public static CrackShotConnector crackShotConnector;
 	public static MyPetsConnector myPetsConnector;
+	public static MythicMobsConnector mythicMobsConnector;
+	public static LevelledMobsConnector levelledMobsConnector;
 
     public void onEnable(){
 		try{
@@ -75,6 +79,7 @@ public class MobMoney extends JavaPlugin{
 	}
 	
 	private void setConfig()throws Exception{
+		saveResource("strikeSystem.sample.yml", false);
 		File fConfig=new File(cplugin+"/config.yml");
 		if(!fConfig.exists())fConfig.createNewFile();
 		FileConfiguration config=new YamlConfiguration();
@@ -85,7 +90,7 @@ public class MobMoney extends JavaPlugin{
 		if(!config.contains("disabledWorlds"))config.set("disabledWorlds",new String[0]);
 		if(!config.contains("debug"))config.set("debug", false);
 		if(!config.contains("Language"))config.set("Language","English");
-		if(!config.contains("DisableCreative"))config.set("DisableCreative",true);
+		if(!config.contains("DisableCreative"))config.set("DisableCreative",false);
 		if(!config.contains("Timer.enable"))config.set("Timer.enable",false);
 		if(!config.contains("Timer.maxKills"))config.set("Timer.maxKills",20);
 		if(!config.contains("Timer.resetTimeInSeconds"))config.set("Timer.resetTimeInSeconds",30);
@@ -93,91 +98,58 @@ public class MobMoney extends JavaPlugin{
 		if(!config.contains("dailylimit.limit"))config.set("dailylimit.limit",300);
 		if(!config.contains("hooks.CrackShot"))config.set("hooks.CrackShot", true);
 		if(!config.contains("hooks.MyPets"))config.set("hooks.MyPets", true);
+		if(!config.contains("hooks.MythicMobs"))config.set("hooks.MythicMobs", true);
+		if(!config.contains("hooks.LevelledMobs"))config.set("hooks.LevelledMobs", true);
+		config.save(fConfig);
+
+		//Cargando mobs
+		File fMobs = new File(cplugin, "mobs.yml");
+		if(!fMobs.exists()) fMobs.createNewFile();
+		FileConfiguration mobs=new YamlConfiguration();
+		mobs.load(fMobs);
+
+		ConfigurationSection entities;
+		if(mobs.isConfigurationSection("entities")) entities = mobs.getConfigurationSection("entities");
+		else entities = mobs.createSection("entities");
+		assert entities != null;
+
 		String name;
 		for(EntityType et:EntityType.values()){
 			if(!(et.isSpawnable()&&et.isAlive())) {
 				if(et != EntityType.PLAYER) continue;
 				else{
-					if(!config.contains("Entity.params.player.withdrawKilled")) config.set("Entity.params.player.withdrawKilled", true);
-					if(!config.contains("Entity.params.player.affectMultiplier")) config.set("Entity.params.player.affectMultiplier", false);
+					if(!entities.contains("player.withdrawMoney")) entities.set("player.withdrawMoney", config.get("Entity.params.player.withdrawKilled", true));
+					if(!entities.contains("player.affectMultiplier")) entities.set("player.affectMultiplier", config.get("Entity.params.player.affectMultiplier", false));
 				}
 			}
 			name=et.name().toLowerCase();
-			if(!config.contains("Entity.economy."+name))config.set("Entity.economy."+name, 0d);
-			if(!config.contains("Entity.name."+name))config.set("Entity.name."+name,name);
-		}for(SpawnReason sr:SpawnReason.values())if(!config.contains("BlockPayEntitiesSpawnedBy."+sr.name()))config.set("BlockPayEntitiesSpawnedBy."+sr.name(),false);
-		config.save(fConfig);
+			if(!entities.contains(name.concat(".money"))) entities.set(name.concat(".money"), config.get("Entity.economy.".concat(name), 0d));
+			if(!entities.contains(name.concat(".name"))) entities.set(name.concat(".name"), config.get("Entity.name.".concat(name), name));
+		}
+		for(SpawnReason sr:SpawnReason.values()) {
+			if(!mobs.contains("general.payEntitiesSpawnedBy.".concat(sr.name().toLowerCase()))) {
+				mobs.set("general.payEntitiesSpawnedBy.".concat(sr.name().toLowerCase()), !config.getBoolean("BlockPayEntitiesSpawnedBy.".concat(sr.name()), false));
+			}
+		}
+		mobs.save(fMobs);
 		
-		//Creando idiomas
-		File idiomas=new File(cplugin+"/language/");
-		if(!idiomas.exists())idiomas.mkdir();
+		// Loading languages
+		saveResource("language/English.yml", false);
+		saveResource("language/Spanish.yml", false);
+		saveResource("language/Dutch.yml", false);
+		saveResource("language/Chinese.yml", false);
+		saveResource("language/Catalan.yml", false);
+		saveResource("language/Valencian.yml", false);
 		
-		//English
-		File archivo=new File(idiomas+"/English.yml");
-		FileConfiguration yml=new YamlConfiguration();
-		if(!archivo.exists())archivo.createNewFile();
-		else yml.load(archivo);
-		setDefault(yml,"Events.hunt","&aYou've hunted a &b%entity%&a and you've been rewarded %reward%&a!");
-		setDefault(yml,"Events.MaxKillsReached","&cYou reached the limit of entities of you can kill!");
-		setDefault(yml,"Events.entityBanned","&cThe entity you have hunted is banned.");
-		setDefault(yml,"Events.dailyLimitReached","&cYou reached the limit of money you can get today. (%limit%$)");
-		setDefault(yml,"Events.withdrawnByKill", "&cYou've been killed by &e%player%&c and you've lost &e%reward%&c.");
-		setDefault(yml,"Commands.noPermission","&cYou don't have enough privileges for it.");
-		setDefault(yml,"Commands.onlyPlayers","&cThis command only can be executed by in-game players.");
-		setDefault(yml,"Commands.invalidArguments","&cInvalid arguments.");
-		setDefault(yml,"Commands.arguments.reload","reload");
-		setDefault(yml,"Commands.arguments.disableWorld","disableworld");
-		setDefault(yml,"Commands.arguments.enableWorld","enableworld");
-		setDefault(yml,"Commands.arguments.toggle","toggle");
-		setDefault(yml,"Commands.Messages.enabledMessages","&aNow you will receive messages!");
-		setDefault(yml,"Commands.Messages.disabledMessages","&6Now you will not receive messages!");
-		setDefault(yml,"Commands.Messages.addWorld","&aWorld enabled!");
-		setDefault(yml,"Commands.Messages.delWorld","&aWorld disabled!");
-		setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6The world was already in the list!");
-		setDefault(yml,"Commands.Messages.WorldNotFinded","&cThe world has not been found!");
-		setDefault(yml,"Commands.Use.reload","&aReload config: &b/mobmoney reload");
-		setDefault(yml,"Commands.Use.enableWorld","&aEnable world: &b/mobmoney enableworld <World>");
-		setDefault(yml,"Commands.Use.disableWorld","&aDisable world: &b/mobmoney disableworld <World>");
-		setDefault(yml,"Commands.Use.toggle","&aToggle messages: &b/mobmoney toggle");
-		yml.save(archivo);
-		
-		//Español
-		archivo=new File(idiomas+"/Spanish.yml");
-		yml=new YamlConfiguration();
-		if(!archivo.exists())archivo.createNewFile();
-		else yml.load(archivo);
-		setDefault(yml,"Events.hunt","&a¡Has cazado un &b%entity%&a y has sido recompensado con %reward%&a$!");
-		setDefault(yml,"Events.MaxKillsReached","&c¡Has alcanzado el límite de entidades que puedes matar!");
-		setDefault(yml,"Events.entityBanned","&cLa entidad que has cazado se encuentra baneada.");
-        setDefault(yml,"Events.dailyLimitReached","&cHas alcanzado el límite de dinero que puedes obtener hoy. (%limit%$)");
-		setDefault(yml,"Events.withdrawnByKill", "&cTe ha asesinado &e%player%&c y has perdido &e%reward%&c.");
-		setDefault(yml,"Commands.noPermission","&cNo tienes suficientes privilegios para ello.");
-		setDefault(yml,"Commands.onlyPlayers","&cEste comando solo puede ser ejecutado por jugadores dentro del juego.");
-		setDefault(yml,"Commands.invalidArguments","&cArgumentos inválidos.");
-		setDefault(yml,"Commands.arguments.reload","recargar");
-		setDefault(yml,"Commands.arguments.disableWorld","deshabilitarmundo");
-		setDefault(yml,"Commands.arguments.enableWorld","habilitarmundo");
-		setDefault(yml,"Commands.arguments.toggle","toggle");
-		setDefault(yml,"Commands.Messages.enabledMessages","&a¡Ahora recibirás mensajes!");
-		setDefault(yml,"Commands.Messages.disabledMessages","&6¡Ya no recibirás mensajes!");
-		setDefault(yml,"Commands.Messages.addWorld","&a¡Mundo habilitado!");
-		setDefault(yml,"Commands.Messages.delWorld","&a¡Mundo deshabilitado!");
-		setDefault(yml,"Commands.Messages.CurrentlyWorldAdded","&6¡El mundo ya estaba en la lista!");
-		setDefault(yml,"Commands.Messages.WorldNotFinded","&c¡No se ha encontrado el mundo!");
-		setDefault(yml,"Commands.Use.reload","&aRecargar la configuración: &b/mobmoney recargar");
-		setDefault(yml,"Commands.Use.enableWorld","&aHabilitar mundo: &b/mobmoney habilitarmundo <Mundo>");
-		setDefault(yml,"Commands.Use.disableWorld","&aDeshabilitar mundo: &b/mobmoney deshabilitarmundo <Mundo>");
-		setDefault(yml,"Commands.Use.toggle","&aDeshabilitar mensajes: &b/mobmoney toggle");
-		yml.save(archivo);
-		
-		//Cargando configuración
-		disabledWorlds=config.getStringList("disabledWorlds");
-		action=config.getBoolean("notificationsInActionBar");
+		// Loading config
+		disabledWorlds = config.getStringList("disabledWorlds");
+		action = config.getBoolean("notificationsInActionBar");
 		if(config.getBoolean("dailylimit.enabled")){
 		    if(dailylimit!=null) dailylimit.save();
             dailylimitLimit=config.getDouble("dailylimit.limit");
             dailylimit= com.anderhurtado.spigot.mobmoney.objets.DailyLimit.getInstance();
         }else dailylimit=null;
+		File idiomas=new File(cplugin+"/language/");
 		File fidioma=new File(idiomas+"/"+config.getString("Language")+".yml");
 		if(!fidioma.exists()){
 			Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"Language file named '"+fidioma.getName()+"' not found! Using 'English.yml'");
@@ -187,12 +159,20 @@ public class MobMoney extends JavaPlugin{
 		}
 		com.anderhurtado.spigot.mobmoney.objets.User.limpiarUsuarios();
 		Mob.clearMobs();
-		ConfigurationSection entities = config.getConfigurationSection("Entity.economy");
-		assert entities != null;
 		for(String key:entities.getKeys(false)) {
-			double price = entities.getDouble(key);
-			name = config.getString("Entity.name."+key, key);
-			new Mob(key, price, name);
+			String price = entities.getString(key.concat(".money"));
+			name = ChatColor.translateAlternateColorCodes('&', entities.getString(key.concat(".name"), key));
+			Mob mob = new Mob(key, price, name, entities.getDouble(key.concat(".defaultLevel"), 1));
+			ConfigurationSection otherPrices = entities.getConfigurationSection(key.concat(".whenSpawnedBy"));
+			if(otherPrices != null) {
+				for(String sprs:otherPrices.getKeys(false)) {
+					try {
+						mob.addFormula(otherPrices.getString(sprs), SpawnReason.valueOf(sprs));
+					} catch (IllegalArgumentException IAEx) {
+						System.out.println(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+sprs +" is not a valid spawn reason! Check your mobs.yml and use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html as guide! (If you are not using the latest Minecraft version, this guide may be can't help, you can contact support in our Discord server: https://discord.gg/J7Ze4A54K7)");
+					}
+				}
+			}
 		}
 		disableCreative=config.getBoolean("DisableCreative");
 		enableTimer=config.getBoolean("Timer.enable");
@@ -202,9 +182,9 @@ public class MobMoney extends JavaPlugin{
 		}
 		debug = config.getBoolean("debug", false);
 		spawnban.clear();
-		for(SpawnReason sr:SpawnReason.values())if(config.getBoolean("BlockPayEntitiesSpawnedBy."+sr.name()))spawnban.add(sr);
-		withdrawFromPlayers = config.getBoolean("Entity.params.player.withdrawKilled");
-		affectMultiplierOnPlayers = config.getBoolean("Entity.params.player.affectMultiplier");
+		for(SpawnReason sr:SpawnReason.values()) if(!mobs.getBoolean("general.payEntitiesSpawnedBy."+sr.name(), true)) spawnban.add(sr);
+		withdrawFromPlayers = entities.getBoolean("player.withdrawMoney");
+		affectMultiplierOnPlayers = entities.getBoolean("player.affectMultiplier");
 		//Cargando idioma
 		FileConfiguration idioma=new YamlConfiguration();
 		idioma.load(fidioma);
@@ -237,6 +217,28 @@ public class MobMoney extends JavaPlugin{
 				}
 			}
 		} else myPetsConnector = null;
+
+		if(config.getBoolean("hooks.MythicMobs")) {
+			if(myPetsConnector == null) {
+				if(Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) try {
+					mythicMobsConnector = new MythicMobsConnector();
+				} catch (Throwable t) {
+					t.printStackTrace();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with MythicMobs! (Report this bug to MobMoney's developer to fix this)");
+				}
+			}
+		} else mythicMobsConnector = null;
+
+		if(config.getBoolean("hooks.LevelledMobs")) {
+			if(levelledMobsConnector == null) {
+				if(Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) try {
+					levelledMobsConnector = new LevelledMobsConnector();
+				} catch (Throwable t) {
+					t.printStackTrace();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with LevelledMobs! (Report this bug to MobMoney's developer to fix this)");
+				}
+			}
+		} else levelledMobsConnector = null;
 
 		ConditionalAction.resetConditionals();
 		File strikeSystemFile = new File(cplugin, "strikeSystem.yml");

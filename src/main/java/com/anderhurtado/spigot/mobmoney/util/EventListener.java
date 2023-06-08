@@ -3,22 +3,20 @@ package com.anderhurtado.spigot.mobmoney.util;
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent;
 import com.anderhurtado.spigot.mobmoney.objets.ConditionalAction;
+import com.anderhurtado.spigot.mobmoney.objets.DamagedEntity;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.User;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.UUID;
 
@@ -35,12 +33,15 @@ public class EventListener implements Listener {
         User.getUser(e.getPlayer().getUniqueId()).disconnect();
     }
     @EventHandler
-    public void alMorirENTIDAD(EntityDeathEvent e){
+    public void onEntityDeath(EntityDeathEvent e){
         LivingEntity m=e.getEntity();
         Player j=m.getKiller();
         if(j==null) {
             if(MobMoney.crackShotConnector != null) {
                 j = MobMoney.crackShotConnector.getVictim(m);
+                if(j != null) {
+                    DamagedEntity.getOrCreateDamagedEntity(m).damageCachedFault(j);
+                }
             }
 
             if(j == null && myPetsConnector != null) {
@@ -63,6 +64,8 @@ public class EventListener implements Listener {
             return;
         }
         LivingEntity m = e.getKilledEntity();
+        DamagedEntity de = DamagedEntity.getOrCreateDamagedEntity(m);
+        de.remove();
         Player j = e.getKiller();
         String entityType;
         if(m.getType().equals(EntityType.UNKNOWN)) entityType = MetaEntityManager.getEntityType(m);
@@ -79,13 +82,12 @@ public class EventListener implements Listener {
         }else if(mob == null) {
             e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.UNREGISTERED_ENTITY);
         }else {
+            double reward = mob.calculateReward(j, de);
             if(e.getKilledEntity() instanceof OfflinePlayer && withdrawFromPlayers) {
-                double withdraw = mob.getPrice();
-                withdraw = Math.max(Math.min(withdraw, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
-                e.setWithdrawFromEntity(withdraw);
-                e.setReward(withdraw);
+                reward = Math.max(Math.min(reward, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
+                e.setWithdrawFromEntity(reward);
             }
-            else e.setReward(mob.getPrice());
+            e.setReward(reward);
             if(e.getReward() == 0d) {
                 e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_ENTITY);
             }else if(!j.hasPermission("mobmoney.get")) {
@@ -145,7 +147,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void alSpawnear(CreatureSpawnEvent e){
-        if(spawnban.contains(e.getSpawnReason())){
+        CreatureSpawnEvent.SpawnReason spawnReason = e.getSpawnReason();
+        if(spawnban.contains(spawnReason)){
             Entity E=e.getEntity();
             bannedUUID.add(E.getUniqueId().toString());
             try{
@@ -155,7 +158,41 @@ public class EventListener implements Listener {
                 Entity P=E.getPassenger();
                 if(P!=null)bannedUUID.add(P.getUniqueId().toString());
             }
+        } else if(spawnReason != CreatureSpawnEvent.SpawnReason.DEFAULT) new DamagedEntity(e.getEntity(), spawnReason);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onDamage(EntityDamageByEntityEvent e) {
+        Entity d = e.getDamager();
+        if(e.getEntity() instanceof LivingEntity) {
+
+            if(d instanceof Projectile) {
+                ProjectileSource ps = ((Projectile) d).getShooter();
+                if(ps instanceof Entity) d = (Entity) ps;
+            }
+            if(!(d instanceof Player)) {
+                if(crackShotConnector != null) {
+                    if(((LivingEntity) e.getEntity()).getHealth() > e.getFinalDamage()) {
+                        Player attacker = crackShotConnector.getVictim(e.getEntity());
+                        if(attacker != null) d = attacker;
+                    } else { //Entidad va a morir
+                        DamagedEntity.getOrCreateDamagedEntity(e.getEntity()).setDamageCached(e.getFinalDamage());
+                    }
+                }
+
+                if(myPetsConnector != null) {
+                    Player owner = myPetsConnector.getPetOwner((LivingEntity) d);
+                    if(owner != null) d = owner;
+                }
+            }
+            if(d instanceof Player) DamagedEntity.getOrCreateDamagedEntity(e.getEntity()).damages((Player)d, e.getFinalDamage());
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onRegenerate(EntityRegainHealthEvent e) {
+        DamagedEntity de = DamagedEntity.getDamagedEntity(e.getEntity());
+        if(de != null) de.regenerates(e.getAmount());
     }
 
 }

@@ -16,6 +16,6 @@ public class Min extends Function {
 
     @Override
     public double apply(double... doubles) {
-        return Math.max(doubles[0], doubles[1]);
+        return Math.min(doubles[0], doubles[1]);
     }
 }
