@@ -18,7 +18,6 @@ public class CrackShotConnector implements Listener {
 
     public CrackShotConnector() {
         Bukkit.getPluginManager().registerEvents(this, MobMoney.instance);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"Crackshot detected and connected!");
     }
 
     /**

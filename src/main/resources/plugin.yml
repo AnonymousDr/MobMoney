@@ -9,6 +9,7 @@ softdepend:
  - MyPet
  - MythicMobs
  - LevelledMobs
+ - ProtocolLib
 api-version: 1.13
 commands:
  mobmoney:

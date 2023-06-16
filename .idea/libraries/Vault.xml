@@ -5,6 +5,7 @@
       <root url="jar://$USER_HOME$/Desktop/Server/plugins/CrackShot.jar!/" />
       <root url="jar://$USER_HOME$/Desktop/Server/plugins/MyPet-3.12-B1737.jar!/" />
       <root url="jar://$USER_HOME$/Desktop/Server/Plugins API/MythicMobs.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Server/plugins/ProtocolLib.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -200,6 +200,7 @@ public class MobMoney extends JavaPlugin{
 			if(crackShotConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("CrackShot")) try {
 					crackShotConnector = new CrackShotConnector();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"Crackshot detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
 					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
@@ -211,6 +212,7 @@ public class MobMoney extends JavaPlugin{
 			if(myPetsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("MyPet")) try {
 					myPetsConnector = new MyPetsConnector();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"MyPet detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
 					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with MyPets! (Report this bug to MobMoney's developer to fix this)");
@@ -222,6 +224,7 @@ public class MobMoney extends JavaPlugin{
 			if(myPetsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) try {
 					mythicMobsConnector = new MythicMobsConnector();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"MythicMobs detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
 					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with MythicMobs! (Report this bug to MobMoney's developer to fix this)");
@@ -233,6 +236,7 @@ public class MobMoney extends JavaPlugin{
 			if(levelledMobsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) try {
 					levelledMobsConnector = new LevelledMobsConnector();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"LevelledMobs detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
 					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with LevelledMobs! (Report this bug to MobMoney's developer to fix this)");

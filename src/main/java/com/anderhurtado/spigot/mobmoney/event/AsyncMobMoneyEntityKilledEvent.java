@@ -69,6 +69,10 @@ public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Can
         this.reward = reward;
     }
 
+    public double getFinalReward() {
+        return Math.floor(reward * multiplicator * 100d)/100d;
+    }
+
     @Override
     public boolean isCancelled() {
         return cancelReason != CancelReason.NO_CANCELED;

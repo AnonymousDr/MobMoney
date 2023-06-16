@@ -122,7 +122,7 @@ public class EventListener implements Listener {
                     break;
             }
         } else {
-            double reward = Math.floor(e.getReward() * e.getMultiplicator() * 100d)/100d;
+            double reward = e.getFinalReward();
             if(dailylimit != null) dailylimit.addCount(uuid, reward);
             if(e.getKilledEntity() instanceof OfflinePlayer && e.getWithdrawFromEntity() != 0) {
                 double withdraw = e.getWithdrawFromEntity();
@@ -138,7 +138,7 @@ public class EventListener implements Listener {
                 else mobName = mob.getName();
                 sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",eco.format(reward)),j);
             }
-            eco.depositPlayer(j,reward);
+            mob.getRewardAnimation().apply(e);
 
             //Handles commands
             ConditionalAction.handleCommands(e, strikes);
@@ -180,7 +180,7 @@ public class EventListener implements Listener {
                     }
                 }
 
-                if(myPetsConnector != null) {
+                if(myPetsConnector != null && d instanceof LivingEntity) {
                     Player owner = myPetsConnector.getPetOwner((LivingEntity) d);
                     if(owner != null) d = owner;
                 }

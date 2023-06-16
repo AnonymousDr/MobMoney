@@ -1,10 +1,12 @@
 package com.anderhurtado.spigot.mobmoney.objets;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
+import com.anderhurtado.spigot.mobmoney.objets.rewards.DroppedCoinsAnimation;
+import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
 import com.anderhurtado.spigot.mobmoney.util.function.Decode;
 import com.anderhurtado.spigot.mobmoney.util.function.Max;
 import com.anderhurtado.spigot.mobmoney.util.function.Min;
-import com.anderhurtado.spigot.mobmoney.util.softdepend.LevelledMobsConnector;
+import com.anderhurtado.spigot.mobmoney.util.function.Random;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.entity.Entity;
@@ -31,6 +33,7 @@ public class Mob{
 	private final String entityType;
 	private final HashMap<CreatureSpawnEvent.SpawnReason, Expression> otherPrices = new HashMap<>();
 	private String name;
+	private final RewardAnimation rewardAnimation = new DroppedCoinsAnimation();
 	
 	public Mob(String entityType,String price,String name, double defaultLevel){
 		this.name=name;
@@ -49,7 +52,9 @@ public class Mob{
 
 	private Expression convertToExpression(String formula) {
 		ExpressionBuilder expressionBuilder = new ExpressionBuilder(formula);
-		expressionBuilder.functions(Max.getInstance(), Min.getInstance(), Decode.getInstance()).variables("damage", "MMlevel", "LMlevel");
+		expressionBuilder
+				.functions(Max.getInstance(), Min.getInstance(), Decode.getInstance(), Random.getInstance())
+				.variables("damage", "MMlevel", "LMlevel");
 		if(entityType.equalsIgnoreCase("player")) expressionBuilder.variable("money");
 		return expressionBuilder.build();
 	}
@@ -82,5 +87,9 @@ public class Mob{
 			price.setVariable("damage", damagedVictim.getDamageFrom(killer));
 			return price.evaluate();
 		}
+	}
+
+	public RewardAnimation getRewardAnimation() {
+		return rewardAnimation;
 	}
 }
