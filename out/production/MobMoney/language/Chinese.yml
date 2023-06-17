@@ -1,0 +1,106 @@
+Events:
+  hunt: '&a你刚刚打倒了一只 &b%entity%&a 并获得了￥%reward%&a！'
+  MaxKillsReached: '&c你达到了获取击杀奖励的上限'
+  entityBanned: '&c这种怪物没有开启击杀奖励'
+  dailyLimitReached: '&c您已经达到本日杀怪奖励上限(￥%limit%)'
+Commands:
+  noPermission: '&c你没有使用改命令的权限'
+  onlyPlayers: '&c此命令只能由游戏内玩家执行'
+  invalidArguments: '&c无效参数'
+  arguments:
+    reload: reload
+    disableWorld: disableworld
+    enableWorld: enableworld
+    toggle: toggle
+  Messages:
+    enabledMessages: '&a你现在开始接收消息了!'
+    disabledMessages: '&6已关闭!'
+    addWorld: '&a世界杀怪数统计已开启!'
+    delWorld: '&a世界杀怪数统计已关闭!'
+    CurrentlyWorldAdded: '&6这个世界已经在列表里面了!'
+    WorldNotFinded: '&c没有找到这个世界!'
+  Use:
+    reload: '&aReload config: &b/mobmoney 已重载'
+    enableWorld: '&aEnable world: &b/mobmoney 在 <World> 开启'
+    disableWorld: '&aDisable world: &b/mobmoney 在 <World> 关闭'
+    toggle: '&aToggle messages: &b/mobmoney 已切换'
+Entities:
+  Names: # IMPORTANT: Copy this configuration into config.yml
+    elder_guardian: 远古守卫者
+    wither_skeleton: 凋零骷髅
+    stray: 流浪者
+    husk: 尸壳
+    zombie_villager: 僵尸村民
+    skeleton_horse: 骷髅马
+    zombie_horse: 僵尸马
+    armor_stand: 盔甲架
+    donkey: 驴
+    mule: 骡子
+    evoker: 唤魔者
+    vex: 恼鬼
+    vindicator: 卫道士
+    illusioner: 幻术师
+    creeper: 苦力怕
+    skeleton: 骷髅
+    spider: 蜘蛛
+    giant: 巨人
+    zombie: 僵尸
+    slime: 史莱姆
+    ghast: 恶魂
+    zombified_piglin: 僵尸猪灵
+    enderman: 末影人
+    cave_spider: 洞穴蜘蛛
+    silverfish: 蠹虫
+    blaze: 烈焰人
+    magma_cube: 岩浆怪
+    ender_dragon: 末影龙
+    wither: 凋零
+    bat: 蝙蝠
+    witch: 女巫
+    endermite: 末影螨
+    guardian: 守卫者
+    shulker: 潜影贝
+    pig: 猪
+    sheep: 羊
+    cow: 牛
+    chicken: 鸡
+    squid: 乌贼
+    wolf: 狼
+    mushroom_cow: 蘑菇牛
+    snowman: 雪傀儡
+    ocelot: 豹猫
+    iron_golem: 铁傀儡
+    horse: 马
+    rabbit: 兔子
+    polar_bear: 北极熊
+    llama: 羊驼
+    parrot: 鹦鹉
+    villager: 村民
+    turtle: 海龟
+    phantom: 幻翼
+    cod: 鳕鱼
+    salmon: 鲑鱼
+    pufferfish: 河豚
+    tropical_fish: 热带鱼
+    drowned: 溺尸
+    dolphin: 海豚
+    cat: 猫
+    panda: 熊猫
+    pillager: 掠夺者
+    ravager: 劫掠兽
+    trader_llama: 行商羊驼
+    wandering_trader: 流浪商人
+    fox: 狐狸
+    bee: 蜜蜂
+    hoglin: 疣猪兽
+    piglin: 猪灵
+    strider: 炽足兽
+    zoglin: 僵尸猪灵
+    piglin_brute: 僵尸疣猪兽
+    axolotl: 美西螈
+    glow_squid: 发光鱿鱼
+    goat: 山羊
+    allay: 悦灵
+    frog: 青蛙
+    tadpole: 蝌蚪
+    warden: 监守着

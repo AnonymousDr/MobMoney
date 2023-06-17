@@ -1,0 +1,30 @@
+name: MobMoney
+main: com.anderhurtado.spigot.mobmoney.MobMoney
+version: 3.0.0
+author: Anonymous_Dr
+description: Kill mobs to get money.
+depend: [Vault]
+softdepend:
+ - CrackShot
+ - MyPet
+api-version: 1.13
+commands:
+ mobmoney:
+  description: Plugin''s command.
+  aliases: [mb]
+permissions:
+ mobmoney.reload:
+  description: Give's permission to reload the config.
+  default: op
+ mobmoney.disableworld:
+  description: Give's permission to disable a world.
+  default: op
+ mobmoney.enableworld:
+  description: Give's permission to enable a world.
+  default: op
+ mobmoney.get:
+  description: Give's permission to get money killing mobs.
+  default: true
+ mobmoney.toggle:
+  description: Give's permission to toggle the message received at kill a entity to get money.
+  default: true

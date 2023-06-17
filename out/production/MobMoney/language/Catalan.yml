@@ -1,0 +1,26 @@
+Events:
+  hunt: '&aHas caçat un &b%entity%&a i has sigut recompensat amb %reward%&a$!'
+  MaxKillsReached: '&cHas arribat al limit d''entitats que pots matar!'
+  entityBanned: '&cL''entitat que has caçat es troba banejada.'
+  dailyLimitReached: '&cHas arribat al limit de diners que pots obtenir avui. (%limit%$)'
+Commands:
+  noPermission: '&cNo tens suficients privilegis per a això.'
+  onlyPlayers: '&cAquest comand solamment pot ser executat per jugadors dins del joc.'
+  invalidArguments: '&cArguments invàlids.'
+  arguments:
+    reload: recarregar
+    disableWorld: deshabilitarmon
+    enableWorld: habilitarmon
+    toggle: toggle
+  Messages:
+    enabledMessages: '&aAra rebràs missatges!'
+    disabledMessages: '&6Ja no rebràs missatges!'
+    addWorld: '&aMón habilitat!'
+    delWorld: '&aMón deshabilitat!'
+    CurrentlyWorldAdded: '&6El món ja estava a la llista!'
+    WorldNotFinded: '&cNo s''ha trobat el món!'
+  Use:
+    reload: '&aRecarregar la configuració: &b/mobmoney recarregar'
+    enableWorld: '&aHabilitar món: &b/mobmoney habilitarmon <Món>'
+    disableWorld: '&aDeshabilitar món: &b/mobmoney deshabilitarmon <Món>'
+    toggle: '&aDeshabilitar messatges: &b/mobmoney toggle'

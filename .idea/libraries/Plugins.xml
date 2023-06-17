@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Plugins">
+    <CLASSES>
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/Vault.jar!/" />
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/CrackShot.jar!/" />
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/MyPet-3.12-B1737.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
