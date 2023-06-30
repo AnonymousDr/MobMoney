@@ -6,6 +6,8 @@ import com.anderhurtado.spigot.mobmoney.objets.ConditionalAction;
 import com.anderhurtado.spigot.mobmoney.objets.DamagedEntity;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.User;
+import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
+import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -36,11 +38,12 @@ public class EventListener implements Listener {
     public void onEntityDeath(EntityDeathEvent e){
         LivingEntity m=e.getEntity();
         Player j=m.getKiller();
+        DamagedEntity de = DamagedEntity.getOrCreateDamagedEntity(m);
         if(j==null) {
             if(MobMoney.crackShotConnector != null) {
                 j = MobMoney.crackShotConnector.getVictim(m);
                 if(j != null) {
-                    DamagedEntity.getOrCreateDamagedEntity(m).damageCachedFault(j);
+                    de.damageCachedFault(j);
                 }
             }
 
@@ -49,7 +52,7 @@ public class EventListener implements Listener {
             }
             if(j == null) return;
         }
-        AsyncMobMoneyEntityKilledEvent event = new AsyncMobMoneyEntityKilledEvent(j, m, 0);
+        AsyncMobMoneyEntityKilledEvent event = new AsyncMobMoneyEntityKilledEvent(j, m, 0, de);
         Bukkit.getScheduler().runTaskAsynchronously(instance, ()->callEvent(event));
     }
 
@@ -64,7 +67,7 @@ public class EventListener implements Listener {
             return;
         }
         LivingEntity m = e.getKilledEntity();
-        DamagedEntity de = DamagedEntity.getOrCreateDamagedEntity(m);
+        DamagedEntity de = e.getDamagedEntity();
         de.remove();
         Player j = e.getKiller();
         String entityType;
@@ -72,6 +75,16 @@ public class EventListener implements Listener {
         else entityType = m.getType().toString();
         if(debug) System.out.println("[MOBMONEY DEBUG] Entity killed: "+entityType);
         Mob mob=Mob.getEntity(entityType);
+
+        if(mob.getDamageRequired() != null) {
+            Expression damageRequired = mob.getDamageRequired();
+            double required;
+            synchronized (damageRequired) {
+                required = damageRequired.setVariable("maxHealth", MaxHealth.getMaxHealth(m)).evaluate();
+            }
+            if(de.getDamageFrom(j) < required) e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.LESS_DAMAGE_THAN_REQUIRED);
+        }
+
         UUID uuid=j.getUniqueId();
         User u=User.getUser(uuid);
         if(affectMultiplierOnPlayers || e.getKilledEntity().getType() != EntityType.PLAYER) e.setMultiplicator(u.getMultiplicator());
@@ -79,9 +92,8 @@ public class EventListener implements Listener {
 
         if(disabledWorlds.contains(m.getWorld().getName())) {
             e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_WORLD);
-        }else if(mob == null) {
-            e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.UNREGISTERED_ENTITY);
-        }else {
+        }
+        else {
             double reward = mob.calculateReward(j, de);
             if(e.getKilledEntity() instanceof OfflinePlayer && withdrawFromPlayers) {
                 reward = Math.max(Math.min(reward, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
@@ -133,12 +145,21 @@ public class EventListener implements Listener {
                 if(e.getReward() == e.getWithdrawFromEntity()) reward = withdraw;
             }
             if(u.getReceiveOnDeath()) {
+                int flags = 0;
                 String mobName;
                 if(mob == null) mobName = entityType;
-                else mobName = mob.getName();
-                sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",eco.format(reward)),j);
+                else {
+                    mobName = mob.getName();
+                    RewardAnimation[] animations = mob.getRewardAnimations();
+                    if(animations != null) for(RewardAnimation ra:animations) {
+                        if(((flags & ra.getFlags()) & 0b1) != 0) continue;
+                        Bukkit.getScheduler().runTaskAsynchronously(instance,()->ra.apply(e));
+                        flags |= ra.getFlags();
+                    }
+                }
+                if((flags & 0b1) == 0) eco.depositPlayer(j, reward);
+                if((flags & 0b10) == 0) sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",eco.format(reward)),j);
             }
-            mob.getRewardAnimation().apply(e);
 
             //Handles commands
             ConditionalAction.handleCommands(e, strikes);

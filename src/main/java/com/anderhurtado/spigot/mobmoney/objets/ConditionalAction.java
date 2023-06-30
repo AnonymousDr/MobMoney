@@ -2,15 +2,16 @@ package com.anderhurtado.spigot.mobmoney.objets;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent;
+import com.anderhurtado.spigot.mobmoney.util.PreDefinedExpression;
 import com.anderhurtado.spigot.mobmoney.util.function.Max;
 import com.anderhurtado.spigot.mobmoney.util.function.Min;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.libs.org.eclipse.sisu.Nullable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,14 +81,15 @@ public class ConditionalAction {
         this.maxRequired = maxRequired;
         this.commands = commands;
         if(strikeMultiplicator != null){
-            ExpressionBuilder eb = new ExpressionBuilder(strikeMultiplicator).functions(Max.getInstance(), Min.getInstance()).variable("x");
+            ExpressionBuilder eb = new PreDefinedExpression(strikeMultiplicator).variable("x");
             if(strikeMultiplicator.contains("y")) eb.variable("y");
             this.strikeMultiplicator = eb.build();
         }
         else this.strikeMultiplicator = null;
 
-        if(strikeBase != null) this.strikeBase = new ExpressionBuilder(strikeBase).functions(Max.getInstance(), Min.getInstance()).variables("x","y").build();
-        else this.strikeBase = null;
+        if(strikeBase != null) {
+            this.strikeBase = new PreDefinedExpression(strikeBase).variables("x","y").build();
+        } else this.strikeBase = null;
     }
 
     public boolean validStrike(int strike) {

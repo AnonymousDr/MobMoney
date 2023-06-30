@@ -1,0 +1,47 @@
+notificationsInActionBar: true
+disabledWorlds: []
+debug: false
+Language: English
+DisableCreative: false
+Timer:
+  enable: false
+  maxKills: 20
+  resetTimeInSeconds: 30
+dailylimit:
+  enabled: false
+  limit: 300
+# Animations sample. Disabled. You can set this by entity. You can find more information in the wiki
+defaultAnimations:
+  coinsSample:
+    enabled: false # Disabled
+    animation: DROP_COINS # Drop coins animation
+    format: '&2$&a%value%' # Name of the dropped items
+    amountDrops: 3
+    items:
+      - 1 DIAMOND {Enchantments:[{id:unbreaking,lvl:1}]}
+      - 2 EMERALD
+    order: RANDOM # You can use ORDERED instead. Then, it will drop first a diamond, then the emeralds.
+    recollectableByEveryone: true # Everyone will be able to pick up the dropped item(s)
+    autoPickUpInTicks: 0 # This feature is disabled. To enable it, set a number above 0. 1 second = 20 ticks (with 20TPS)
+    pickUpToPay: true # The money won't be given until a player pick-ups the item. If recollectableByEveryone is true, everyone will be allowed to get the money. Otherwise, only the killer will get the money. If autoPickUpInTicks is 0, money won't be given if the player doesn't pick up the dropped item
+    silentMessageOnKill: true # Disables
+    messageOnPickUp: '&aYou''ve got &9%money%&a for killing &6%entity%&a!'
+  hologramSample:
+    enabled: false
+    animation: HOLOGRAM
+    format: '&6%money%'
+    velocity: 0.025 # Velocity in ticks/second. IN SOME VERSIONS MAY BE DIFFERENT.
+    ticksToDestroy: 60 # Duration in ticks
+    offsetY: 1.5 # Elevation from killed entity
+  dropItemsSample:
+    enabled: false
+    animation: DROP_ITEMS
+    damageRequired: 2
+    recollectableByEveryone: false
+    drops:
+      - stick
+hooks: # Enabled hooks (if plugin its found)
+  CrackShot: true
+  MyPets: true
+  MythicMobs: true
+  LevelledMobs: true

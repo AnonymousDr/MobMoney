@@ -57,9 +57,10 @@ public class DamagedEntity {
     public void regenerates(double regeneration) {
         if(damages != null) {
             damages.replaceAll((p,d)->{
-                if(d <= regeneration) return null;
+                if(d == null || d <= regeneration) return null;
                 return d-regeneration;
             });
+            for(Player p : damages.keySet()) if(damages.get(p) == null) damages.remove(p);
             if(damages.isEmpty() && spawnReason != CreatureSpawnEvent.SpawnReason.DEFAULT) remove();
         }
     }

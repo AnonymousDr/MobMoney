@@ -5,22 +5,75 @@
       <artifact name="MobMoney" />
     </artifacts-to-build>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Update 2.9">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Plugins.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Spigot.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_jupiter_engine.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_jupiter_params.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/net_objecthunter_exp4j.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/watchwolf_tester_0_1_12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/com/anderhurtado/test/Test.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/Counter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/CounterByObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DefinedSound.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/EntityBox.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/DroppedItemsAnimation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/wrappedPackets/PickUpItemWrappedPacket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/ColorManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/ItemStackUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/MaxHealth.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/PreDefinedExpression.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/VersionManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/WrappedDataProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/PluginsJava_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/PluginsJava_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Spigot.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Spigot.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Vault.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/junit_jupiter_engine.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/junit_jupiter_params.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/spigot_1_14.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/watchwolf_tester_0_1_12.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MMJava+/MMJava+.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MMJava+/MMJava+.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MobMoney.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MobMoney.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent$CancelReason.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent$CancelReason.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/DrownedProtection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/DrownedProtection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Mob.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Mob.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/function/Min.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/function/Min.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/softdepend/CrackShotConnector.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/softdepend/CrackShotConnector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/language/Catalan.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/language/Catalan.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/language/Dutch.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/language/Dutch.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/language/Spanish.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/language/Spanish.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/strikeSystem.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/Vault.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/com/anderhurtado/test/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/essentials/EssentialsX-2.18.1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/essentials/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/mobmoney/MobMoney.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/MobMoney/mobmoney/config.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/strikeSystem.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/strikeSystem.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DrownedProtection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DrownedProtection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/Mob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/Mob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/DroppedCoinsAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/DroppedCoinsAnimation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/HologramAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/HologramAnimation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/RewardAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/RewardAnimation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/wrappedPackets/SpawnEntityWrappedPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/wrappedPackets/SpawnEntityWrappedPacket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/EventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/EventListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +83,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -37,7 +91,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="pre" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -63,10 +117,11 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ihbi/Downloads/watchwolf-tester-0.1.12.jar&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Datos/Plugins/APIs/Java/Spigot/Plugins/ProtocolLib 1.19.jar&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15234375&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.20530565&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -74,7 +129,7 @@
       <recent name="C:\Users\ihbi\IdeaProjects\MobMoney\src\main\resources\language" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Shell Script.Server">
     <configuration name="Test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MobMoney" />
       <extension name="coverage">
@@ -85,6 +140,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.anderhurtado.test" />
       <option name="MAIN_CLASS_NAME" value="com.anderhurtado.test.Test" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -106,6 +162,30 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Server" type="ShConfigurationType">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="false" />
+      <option name="SCRIPT_PATH" value="$USER_HOME$/Desktop/Server/Iniciar.bat" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2">
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="MobMoney" />
+        </option>
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.Test" />
+      <item itemvalue="JUnit.Test.killing" />
+      <item itemvalue="Shell Script.Server" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.Test" />
@@ -157,7 +237,21 @@
       <option name="project" value="LOCAL" />
       <updated>1675013099582</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Update 2.9">
+      <created>1686999008967</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1686999008967</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Update 2.9">
+      <created>1686999030776</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1686999030776</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

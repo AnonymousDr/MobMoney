@@ -1,5 +1,6 @@
 package com.anderhurtado.spigot.mobmoney.event;
 
+import com.anderhurtado.spigot.mobmoney.objets.DamagedEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -16,13 +17,15 @@ public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Can
     private final Player killer;
     private final LivingEntity killedEntity;
     private double reward, multiplicator = 1, withdrawFromEntity;
+    private final DamagedEntity damagedEntity;
     private CancelReason cancelReason = CancelReason.NO_CANCELED;
 
-    public AsyncMobMoneyEntityKilledEvent(Player killer, LivingEntity killedEntity, double reward) {
+    public AsyncMobMoneyEntityKilledEvent(Player killer, LivingEntity killedEntity, double reward, DamagedEntity damagedEntity) {
         super(true);
         this.killer = killer;
         this.killedEntity = killedEntity;
         this.reward = reward;
+        this.damagedEntity = damagedEntity;
     }
 
     public Player getKiller() {
@@ -59,6 +62,10 @@ public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Can
      */
     public double getReward() {
         return reward;
+    }
+
+    public DamagedEntity getDamagedEntity() {
+        return damagedEntity;
     }
 
     /**
@@ -108,6 +115,7 @@ public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Can
     }
 
     public enum CancelReason {
-        NO_CANCELED, UNDEFINED, UNREGISTERED_ENTITY, DISABLED_ENTITY, DISABLED_WORLD, PLAYER_WITH_NO_PRIVILEGES, CREATIVE, BANNED_ENTITY, PLAYER_MAX_KILLS_REACHED, PLAYER_DAILY_LIMIT_REACHED
+        NO_CANCELED, UNDEFINED, UNREGISTERED_ENTITY, DISABLED_ENTITY, DISABLED_WORLD, PLAYER_WITH_NO_PRIVILEGES,
+        CREATIVE, BANNED_ENTITY, PLAYER_MAX_KILLS_REACHED, PLAYER_DAILY_LIMIT_REACHED, LESS_DAMAGE_THAN_REQUIRED
     }
 }

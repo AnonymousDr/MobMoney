@@ -15,7 +15,7 @@ public class DrownedProtection implements Listener{
     HashMap<Entity,String> entidades=new HashMap<>();
 
     @EventHandler
-    public void alSpawnearEntidad(CreatureSpawnEvent e){
+    public void onEntitySpawn(CreatureSpawnEvent e){
         if(!e.getSpawnReason().name().equals("DROWNED"))return;
         Entity E=e.getEntity();
         Location l=E.getLocation();

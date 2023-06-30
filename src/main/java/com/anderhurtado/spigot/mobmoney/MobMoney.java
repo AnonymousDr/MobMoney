@@ -2,16 +2,21 @@ package com.anderhurtado.spigot.mobmoney;
 
 import java.io.File;
 import java.util.*;
+import java.util.logging.Level;
 
 import com.anderhurtado.spigot.mobmoney.objets.*;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.Timer;
+import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
+import com.anderhurtado.spigot.mobmoney.util.ColorManager;
 import com.anderhurtado.spigot.mobmoney.util.EventListener;
+import com.anderhurtado.spigot.mobmoney.util.PreDefinedExpression;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.CrackShotConnector;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.LevelledMobsConnector;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.MyPetsConnector;
 import com.anderhurtado.spigot.mobmoney.util.softdepend.MythicMobsConnector;
+import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -41,6 +46,10 @@ public class MobMoney extends JavaPlugin{
 	public static MyPetsConnector myPetsConnector;
 	public static MythicMobsConnector mythicMobsConnector;
 	public static LevelledMobsConnector levelledMobsConnector;
+
+	public static void sendPluginMessage(String msg) {
+		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+msg);
+	}
 
     public void onEnable(){
 		try{
@@ -73,34 +82,20 @@ public class MobMoney extends JavaPlugin{
 			Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(com.anderhurtado.spigot.mobmoney.objets.User::new),1);
 		}catch(Exception Ex){
 			Ex.printStackTrace();
-			Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"Plugin disabled!");
+			sendPluginMessage(ChatColor.RED+"Plugin disabled!");
 			Bukkit.getPluginManager().disablePlugin(this);
 		}
 	}
 	
 	private void setConfig()throws Exception{
-		saveResource("strikeSystem.sample.yml", false);
-		File fConfig=new File(cplugin+"/config.yml");
+		if(!new File(cplugin, "strikeSystem.sample.yml").exists()) saveResource("strikeSystem.sample.yml", false);
+		File fConfig=new File(cplugin, "config.yml");
 		if(!fConfig.exists())fConfig.createNewFile();
 		FileConfiguration config=new YamlConfiguration();
 		config.load(fConfig);
 		
 		//Creando configuración
-        if(!config.contains("notificationsInActionBar"))config.set("notificationsInActionBar",false);
-		if(!config.contains("disabledWorlds"))config.set("disabledWorlds",new String[0]);
-		if(!config.contains("debug"))config.set("debug", false);
-		if(!config.contains("Language"))config.set("Language","English");
-		if(!config.contains("DisableCreative"))config.set("DisableCreative",false);
-		if(!config.contains("Timer.enable"))config.set("Timer.enable",false);
-		if(!config.contains("Timer.maxKills"))config.set("Timer.maxKills",20);
-		if(!config.contains("Timer.resetTimeInSeconds"))config.set("Timer.resetTimeInSeconds",30);
-		if(!config.contains("dailylimit.enabled"))config.set("dailylimit.enabled",false);
-		if(!config.contains("dailylimit.limit"))config.set("dailylimit.limit",300);
-		if(!config.contains("hooks.CrackShot"))config.set("hooks.CrackShot", true);
-		if(!config.contains("hooks.MyPets"))config.set("hooks.MyPets", true);
-		if(!config.contains("hooks.MythicMobs"))config.set("hooks.MythicMobs", true);
-		if(!config.contains("hooks.LevelledMobs"))config.set("hooks.LevelledMobs", true);
-		config.save(fConfig);
+        saveDefaultConfig();
 
 		//Cargando mobs
 		File fMobs = new File(cplugin, "mobs.yml");
@@ -132,14 +127,15 @@ public class MobMoney extends JavaPlugin{
 			}
 		}
 		mobs.save(fMobs);
-		
+
+		File base = new File(cplugin, "language");
 		// Loading languages
-		saveResource("language/English.yml", false);
-		saveResource("language/Spanish.yml", false);
-		saveResource("language/Dutch.yml", false);
-		saveResource("language/Chinese.yml", false);
-		saveResource("language/Catalan.yml", false);
-		saveResource("language/Valencian.yml", false);
+		if(!new File(base, "English.yml").exists()) saveResource("language/English.yml", false);
+		if(!new File(base, "Spanish.yml").exists()) saveResource("language/Spanish.yml", false);
+		if(!new File(base, "Dutch.yml").exists()) saveResource("language/Dutch.yml", false);
+		if(!new File(base, "Chinese.yml").exists()) saveResource("language/Chinese.yml", false);
+		if(!new File(base, "Catalan.yml").exists()) saveResource("language/Catalan.yml", false);
+		if(!new File(base, "Valencian.yml").exists()) saveResource("language/Valencian.yml", false);
 		
 		// Loading config
 		disabledWorlds = config.getStringList("disabledWorlds");
@@ -152,27 +148,33 @@ public class MobMoney extends JavaPlugin{
 		File idiomas=new File(cplugin+"/language/");
 		File fidioma=new File(idiomas+"/"+config.getString("Language")+".yml");
 		if(!fidioma.exists()){
-			Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"Language file named '"+fidioma.getName()+"' not found! Using 'English.yml'");
+			sendPluginMessage(ChatColor.RED+"Language file named '"+fidioma.getName()+"' not found! Using 'English.yml'");
 			config.set("Language","English");
 			config.save(fConfig);
 			fidioma=new File(idiomas+"/English.yml");
 		}
 		com.anderhurtado.spigot.mobmoney.objets.User.limpiarUsuarios();
 		Mob.clearMobs();
+		Mob.setDefaultRewardAnimations(RewardAnimation.processConfig(config.getConfigurationSection("defaultAnimations")));
 		for(String key:entities.getKeys(false)) {
 			String price = entities.getString(key.concat(".money"));
-			name = ChatColor.translateAlternateColorCodes('&', entities.getString(key.concat(".name"), key));
-			Mob mob = new Mob(key, price, name, entities.getDouble(key.concat(".defaultLevel"), 1));
+			name = ColorManager.translateColorCodes(entities.getString(key.concat(".name"), key));
+			Expression damageRequired;
+			String damageRequiredStr = entities.getString(key.concat(".minDamage"));
+			if(damageRequiredStr == null) damageRequired = null;
+			else damageRequired = new PreDefinedExpression(damageRequiredStr).variable("maxHealth").build();
+			Mob mob = new Mob(key, price, name, entities.getDouble(key.concat(".defaultLevel"), 1), damageRequired);
 			ConfigurationSection otherPrices = entities.getConfigurationSection(key.concat(".whenSpawnedBy"));
 			if(otherPrices != null) {
 				for(String sprs:otherPrices.getKeys(false)) {
 					try {
 						mob.addFormula(otherPrices.getString(sprs), SpawnReason.valueOf(sprs));
 					} catch (IllegalArgumentException IAEx) {
-						System.out.println(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+sprs +" is not a valid spawn reason! Check your mobs.yml and use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html as guide! (If you are not using the latest Minecraft version, this guide may be can't help, you can contact support in our Discord server: https://discord.gg/J7Ze4A54K7)");
+						sendPluginMessage(ChatColor.RED+sprs +" is not a valid spawn reason! Check your mobs.yml and use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html as guide! (If you are not using the latest Minecraft version, this guide may be can't help, you can contact support in our Discord server: https://discord.gg/J7Ze4A54K7)");
 					}
 				}
 			}
+			mob.setRewardAnimations(RewardAnimation.processConfig(entities.getConfigurationSection(key.concat(".animations"))));
 		}
 		disableCreative=config.getBoolean("DisableCreative");
 		enableTimer=config.getBoolean("Timer.enable");
@@ -192,7 +194,7 @@ public class MobMoney extends JavaPlugin{
 		String value;
 		for(String v:idioma.getValues(true).keySet()) {
 			value = idioma.getString(v);
-			if(value != null) msg.put(v,ChatColor.translateAlternateColorCodes('&', value));
+			if(value != null) msg.put(v,ColorManager.translateColorCodes(value));
 		}
 
 		//Loading soft depends
@@ -200,10 +202,10 @@ public class MobMoney extends JavaPlugin{
 			if(crackShotConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("CrackShot")) try {
 					crackShotConnector = new CrackShotConnector();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"Crackshot detected and connected!");
+					sendPluginMessage(ChatColor.GREEN+"Crackshot detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
+					sendPluginMessage(ChatColor.RED+"This plugin is not able to connect with CrackShot! (Report this bug to MobMoney's developer to fix this)");
 				}
 			}
 		} else crackShotConnector = null;
@@ -212,10 +214,10 @@ public class MobMoney extends JavaPlugin{
 			if(myPetsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("MyPet")) try {
 					myPetsConnector = new MyPetsConnector();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"MyPet detected and connected!");
+					sendPluginMessage(ChatColor.GREEN+"MyPet detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with MyPets! (Report this bug to MobMoney's developer to fix this)");
+					sendPluginMessage(ChatColor.RED+"This plugin is not able to connect with MyPets! (Report this bug to MobMoney's developer to fix this)");
 				}
 			}
 		} else myPetsConnector = null;
@@ -224,10 +226,10 @@ public class MobMoney extends JavaPlugin{
 			if(myPetsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) try {
 					mythicMobsConnector = new MythicMobsConnector();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"MythicMobs detected and connected!");
+					sendPluginMessage(ChatColor.GREEN+"MythicMobs detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with MythicMobs! (Report this bug to MobMoney's developer to fix this)");
+					sendPluginMessage(ChatColor.RED+"This plugin is not able to connect with MythicMobs! (Report this bug to MobMoney's developer to fix this)");
 				}
 			}
 		} else mythicMobsConnector = null;
@@ -236,10 +238,10 @@ public class MobMoney extends JavaPlugin{
 			if(levelledMobsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) try {
 					levelledMobsConnector = new LevelledMobsConnector();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.GREEN+"LevelledMobs detected and connected!");
+					sendPluginMessage(ChatColor.GREEN+"LevelledMobs detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+ChatColor.RED+"This plugin is not able to connect with LevelledMobs! (Report this bug to MobMoney's developer to fix this)");
+					sendPluginMessage(ChatColor.RED+"This plugin is not able to connect with LevelledMobs! (Report this bug to MobMoney's developer to fix this)");
 				}
 			}
 		} else levelledMobsConnector = null;
@@ -255,7 +257,6 @@ public class MobMoney extends JavaPlugin{
 			int minRequired, maxRequired;
 			String baseFunction, multiplicatorFunction, command, executeCommandAs;
 			final List<PreconfiguredCommand> pcs = new ArrayList<>();
-			entityLoop:
 			for(String entityKey:strikeSystem.getKeys(false)) {
 				try{
 					switch (entityKey.toUpperCase()) {
@@ -269,7 +270,8 @@ public class MobMoney extends JavaPlugin{
 							try{
 								et = EntityType.valueOf(entityKey.toUpperCase());
 							} catch (Exception Ex) {
-								continue entityLoop;
+								getLogger().log(Level.WARNING, "No entty found for type "+entityKey);
+								continue;
 							}
 					}
 					entitySection = strikeSystem.getConfigurationSection(entityKey);

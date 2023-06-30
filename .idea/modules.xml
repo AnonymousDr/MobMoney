@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MMJava+/MMJava+.iml" filepath="$PROJECT_DIR$/MMJava+/MMJava+.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MMJava+/MMJavaPlus.iml" filepath="$PROJECT_DIR$/MMJava+/MMJavaPlus.iml" />
       <module fileurl="file://$PROJECT_DIR$/MobMoney.iml" filepath="$PROJECT_DIR$/MobMoney.iml" />
     </modules>
   </component>
