@@ -39,6 +39,8 @@ import org.bukkit.scheduler.BukkitTask;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.anderhurtado.spigot.mobmoney.MobMoney.eco;
+
 public class DroppedCoinsAnimation implements RewardAnimation {
 
     private static final ProtocolManager MANAGER = ProtocolLibrary.getProtocolManager();
@@ -558,23 +560,26 @@ public class DroppedCoinsAnimation implements RewardAnimation {
                         return;
                     }
                 }
-            }, 5, 1);
+            }, 20, 1);
         }
 
         public void pickUp(Player p) {
             collectorTask.cancel();
-            item.remove();
             collector = p;
+            String entityName = victim.getType().name();
+            Mob mob = Mob.getEntity(entityName);
             PickUpItemWrappedPacket pickUpPacket = new PickUpItemWrappedPacket(p, item.getEntityId(), mask.getAmount());
             pickUpPacket.play(p.getWorld());
-            if((flag & 0b1) != 0) MobMoney.eco.depositPlayer(p, value);
+            if((flag & 0b1) != 0) {
+                if(value >= 0) eco.depositPlayer(p, value);
+                else if(mob != null && mob.isAllowedNegativeValues()) eco.withdrawPlayer(p, -value);
+                MobMoney.eco.depositPlayer(p, value);
+            }
             synchronized (ANIMATION_INSTANCES) {
                 ANIMATION_INSTANCES.remove(id);
             }
             if(soundOnPickUp != null) soundOnPickUp.play(p);
             if(messageOnPickUp != null) {
-                String entityName = victim.getType().name();
-                Mob mob = Mob.getEntity(entityName);
                 if(mob != null) entityName = mob.getName();
                 double money;
                 synchronized (counter) {
@@ -588,6 +593,7 @@ public class DroppedCoinsAnimation implements RewardAnimation {
                         p
                 );
             }
+            Bukkit.getScheduler().runTask(MobMoney.instance, ()->item.remove());
         }
 
         private boolean canCollect(Player p) {

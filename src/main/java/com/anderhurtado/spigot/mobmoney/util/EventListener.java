@@ -139,26 +139,39 @@ public class EventListener implements Listener {
             if(e.getKilledEntity() instanceof OfflinePlayer && e.getWithdrawFromEntity() != 0) {
                 double withdraw = e.getWithdrawFromEntity();
                 if(affectMultiplierOnPlayers) withdraw *= e.getMultiplicator();
-                withdraw = Math.max(Math.min(withdraw, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
-                sendMessage(msg.get("Events.withdrawnByKill").replace("%player%", j.getDisplayName()).replace("%reward%",eco.format(withdraw)), e.getKilledEntity());
-                eco.withdrawPlayer((OfflinePlayer)e.getKilledEntity(), withdraw);
+                if(!mob.isAllowedNegativeValues() || withdraw > 0) withdraw = Math.max(Math.min(withdraw, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
+                sendMessage(msg.get("Events.withdrawnByKill")
+                        .replace("%player%", j.getDisplayName())
+                        .replace("%reward%",eco.format(withdraw)), e.getKilledEntity()
+                );
+                if(withdraw > 0) eco.withdrawPlayer((OfflinePlayer)e.getKilledEntity(), withdraw);
+                else eco.depositPlayer((OfflinePlayer)e.getKilledEntity(), -withdraw);
                 if(e.getReward() == e.getWithdrawFromEntity()) reward = withdraw;
             }
             if(u.getReceiveOnDeath()) {
                 int flags = 0;
                 String mobName;
-                if(mob == null) mobName = entityType;
-                else {
-                    mobName = mob.getName();
-                    RewardAnimation[] animations = mob.getRewardAnimations();
-                    if(animations != null) for(RewardAnimation ra:animations) {
-                        if(((flags & ra.getFlags()) & 0b1) != 0) continue;
-                        Bukkit.getScheduler().runTaskAsynchronously(instance,()->ra.apply(e));
-                        flags |= ra.getFlags();
-                    }
+                mobName = mob.getName();
+                RewardAnimation[] animations = mob.getRewardAnimations();
+                if(animations != null) for(RewardAnimation ra:animations) {
+                    if(((flags & ra.getFlags()) & 0b1) != 0) continue;
+                    Bukkit.getScheduler().runTaskAsynchronously(instance,()->ra.apply(e));
+                    flags |= ra.getFlags();
                 }
-                if((flags & 0b1) == 0) eco.depositPlayer(j, reward);
-                if((flags & 0b10) == 0) sendMessage(msg.get("Events.hunt").replace("%entity%",mobName).replace("%reward%",eco.format(reward)),j);
+                if((flags & 0b1) == 0) {
+                    if(reward >= 0) eco.depositPlayer(j, reward);
+                    else if(mob.isAllowedNegativeValues()) eco.withdrawPlayer(j, -reward);
+                }
+                if((flags & 0b10) == 0) {
+                    String message;
+                    if(mob.getCustomMessageOnKill() != null) message = mob.getCustomMessageOnKill();
+                    else message = msg.get("Events.hunt");
+                    sendMessage(message
+                                    .replace("%entity%",mobName)
+                                    .replace("%reward%",eco.format(reward))
+                                    .replace("%rewardAbs%", eco.format(Math.abs(reward)))
+                            ,j);
+                }
             }
 
             //Handles commands

@@ -21,8 +21,7 @@ public interface RewardAnimation {
             if(ra != null) list.add(ra);
         }
 
-        if(list.isEmpty()) return null;
-        else return list.toArray(new RewardAnimation[0]);
+        return list.toArray(new RewardAnimation[0]);
     }
 
     static RewardAnimation create(ConfigurationSection cs) {

@@ -61,9 +61,7 @@ public class HologramAnimation implements RewardAnimation {
                 );
         wrappedPacket.shareSpawnPackage(location.getWorld());
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(MobMoney.instance, ()->{
-            wrappedPacket.shareDestroyPackage(location.getWorld());
-        }, ticksToDestroy);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(MobMoney.instance, ()->wrappedPacket.shareDestroyPackage(), ticksToDestroy);
     }
 
     @Override

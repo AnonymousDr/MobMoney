@@ -3,8 +3,6 @@ package com.anderhurtado.spigot.mobmoney.objets;
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent;
 import com.anderhurtado.spigot.mobmoney.util.PreDefinedExpression;
-import com.anderhurtado.spigot.mobmoney.util.function.Max;
-import com.anderhurtado.spigot.mobmoney.util.function.Min;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.Bukkit;

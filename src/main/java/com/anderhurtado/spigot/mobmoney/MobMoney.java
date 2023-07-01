@@ -163,7 +163,8 @@ public class MobMoney extends JavaPlugin{
 			String damageRequiredStr = entities.getString(key.concat(".minDamage"));
 			if(damageRequiredStr == null) damageRequired = null;
 			else damageRequired = new PreDefinedExpression(damageRequiredStr).variable("maxHealth").build();
-			Mob mob = new Mob(key, price, name, entities.getDouble(key.concat(".defaultLevel"), 1), damageRequired);
+			Mob mob = new Mob(key, price, name, entities.getDouble(key.concat(".defaultLevel"), 1), damageRequired,
+					entities.getBoolean(key.concat(".negativeValues"), false), entities.getString(key.concat(".customMessageOnKill")));
 			ConfigurationSection otherPrices = entities.getConfigurationSection(key.concat(".whenSpawnedBy"));
 			if(otherPrices != null) {
 				for(String sprs:otherPrices.getKeys(false)) {

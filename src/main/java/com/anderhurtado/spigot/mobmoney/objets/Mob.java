@@ -2,6 +2,7 @@ package com.anderhurtado.spigot.mobmoney.objets;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
+import com.anderhurtado.spigot.mobmoney.util.ColorManager;
 import com.anderhurtado.spigot.mobmoney.util.PreDefinedExpression;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -25,16 +26,7 @@ public class Mob{
 	    mobs.clear();
     }
 
-	private static RewardAnimation[] DEFAULT_REWARD_ANIMATIONS;/* = new RewardAnimation[] {
-			new DroppedCoinsAnimation(net.md_5.bungee.api.ChatColor.of("#660033") +"$"+ChatColor.GREEN+"%value%",
-					new PreDefinedExpression("min(50, money/2)").variable("money").build(),
-					new ItemStack[] {new ItemStack(Material.DIAMOND), new ItemStack(Material.EMERALD, 2)},
-					DroppedCoinsAnimation.MaskOrder.RANDOM, true, 0,
-					true, true, ColorManager.translateColorCodes(ChatColor.GREEN+"You've got #999900%money%"+ChatColor.GREEN+" for killing &6")+"%entity%"+ChatColor.GREEN+"!",
-					new DefinedSound(Sound.valueOf("BLOCK_NOTE_BLOCK_PLING"), 0.35f, 1.9f)),
-			new HologramAnimation(ChatColor.GOLD+"%money%", 0.5f, 100, 1.5),
-			new DroppedItemsAnimation(new PreDefinedExpression("maxHealth/2").variable("maxHealth").build(), true, Bukkit.getUnsafe().modifyItemStack(new ItemStack(Material.DIRT),"{Unbreakable:1,EntityTag:{Invisible:1b},display:{Name:'[{\"text\":\"Mi Espada bonita\",\"italic\":false}]',Lore:['[{\"text\":\"Tremenda espada\",\"italic\":false}]','[{\"text\":\"Que he conseguid yo, sabes?\",\"italic\":false}]','[{\"text\":\"¡PUES SÍ!\",\"italic\":false,\"color\":\"dark_aqua\"}]']},Enchantments:[{id:aqua_affinity,lvl:1},{id:bane_of_arthropods,lvl:3},{id:binding_curse,lvl:1},{id:fire_aspect,lvl:1}]}"), new ItemStack(Material.STICK, 2))
-	};*/
+	private static RewardAnimation[] DEFAULT_REWARD_ANIMATIONS;
 
 	public static void setDefaultRewardAnimations(RewardAnimation[] animations) {
 		DEFAULT_REWARD_ANIMATIONS = animations;
@@ -47,13 +39,17 @@ public class Mob{
 	private final HashMap<CreatureSpawnEvent.SpawnReason, Expression> otherPrices = new HashMap<>();
 	private String name;
 	private RewardAnimation[] rewardAnimations;
+	private boolean negativeValues;
+	private String customMessageOnKill;
 	
-	public Mob(String entityType,String price,String name, double defaultLevel, @Nullable Expression damageRequired){
+	public Mob(String entityType,String price,String name, double defaultLevel, @Nullable Expression damageRequired, boolean negativeValues, @Nullable String customMessageOnKill){
 		this.name=name;
 		this.defaultLevel = defaultLevel;
 		this.entityType = entityType;
 		this.price = convertToExpression(price);
 		this.damageRequired = damageRequired;
+		this.negativeValues = negativeValues;
+		if(customMessageOnKill != null) this.customMessageOnKill = ColorManager.translateColorCodes(customMessageOnKill);
 		mobs.put(entityType.toLowerCase(),this);
 	}
 
@@ -97,7 +93,8 @@ public class Mob{
 			price.setVariable("LMlevel", level);
 
 			price.setVariable("damage", damagedVictim.getDamageFrom(killer));
-			return price.evaluate();
+			if(negativeValues) return price.evaluate();
+			else return Math.max(price.evaluate(), 0);
 		}
 	}
 
@@ -113,6 +110,23 @@ public class Mob{
 
 	public Expression getDamageRequired() {
 		return damageRequired;
+	}
+
+	public boolean isAllowedNegativeValues() {
+		return negativeValues;
+	}
+
+	public void setNegativeValues(boolean active) {
+		negativeValues = active;
+	}
+
+	@Nullable
+	public String getCustomMessageOnKill() {
+		return customMessageOnKill;
+	}
+
+	public void setCustomMessageOnKill(@Nullable String customMessageOnKill) {
+		this.customMessageOnKill = customMessageOnKill;
 	}
 
 }
