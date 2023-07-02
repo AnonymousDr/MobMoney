@@ -9,16 +9,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Update 4.1">
+    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="feat: Now allows negative values.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/Mob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/Mob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Mob.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Mob.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/DroppedCoinsAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/DroppedCoinsAnimation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/HologramAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/HologramAnimation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/RewardAnimation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/rewards/RewardAnimation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/EventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/EventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/strikeSystem.sample.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/strikeSystem.sample.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/function/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/function/Random.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +65,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/ihbi/Desktop/Server/spigot.jar",
-    "project.structure.last.edited": "Facets",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15234375",
     "project.structure.side.proportion": "0.20530565"
   }
@@ -198,7 +199,15 @@
       <option name="project" value="LOCAL" />
       <updated>1688145967272</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: Now allows negative values.">
+      <option name="closed" value="true" />
+      <created>1688213084563</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1688213084563</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -219,6 +228,7 @@
     <MESSAGE value="Added more languages" />
     <MESSAGE value="Update 2.9" />
     <MESSAGE value="Update 4.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update 4.1" />
+    <MESSAGE value="feat: Now allows negative values." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Now allows negative values." />
   </component>
 </project>

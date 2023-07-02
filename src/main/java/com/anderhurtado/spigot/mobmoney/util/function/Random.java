@@ -23,7 +23,8 @@ public class Random extends Function {
             case 1:
                 return random * doubles[0];
             default:
-                return Math.min(doubles[0], doubles[1]) + (random * Math.max(doubles[0], doubles[1]));
+                double min = Math.min(doubles[0], doubles[1]);
+                return min + (random * (Math.max(doubles[0], doubles[1]) - min));
         }
     }
 }

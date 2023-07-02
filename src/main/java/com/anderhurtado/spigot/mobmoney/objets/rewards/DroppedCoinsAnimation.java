@@ -573,7 +573,6 @@ public class DroppedCoinsAnimation implements RewardAnimation {
             if((flag & 0b1) != 0) {
                 if(value >= 0) eco.depositPlayer(p, value);
                 else if(mob != null && mob.isAllowedNegativeValues()) eco.withdrawPlayer(p, -value);
-                MobMoney.eco.depositPlayer(p, value);
             }
             synchronized (ANIMATION_INSTANCES) {
                 ANIMATION_INSTANCES.remove(id);
