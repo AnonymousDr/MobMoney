@@ -92,10 +92,10 @@ public class MobMoney extends JavaPlugin{
 		File fConfig=new File(cplugin, "config.yml");
 		if(!fConfig.exists())fConfig.createNewFile();
 		FileConfiguration config=new YamlConfiguration();
-		config.load(fConfig);
 		
 		//Creando configuración
         saveDefaultConfig();
+		config.load(fConfig);
 
 		//Cargando mobs
 		File fMobs = new File(cplugin, "mobs.yml");
@@ -376,7 +376,7 @@ public class MobMoney extends JavaPlugin{
 				File f=new File(cplugin+"/config.yml");
 				FileConfiguration yml=new YamlConfiguration();
 				yml.load(f);
-				setDefault(yml,"disabledWorlds",disabledWorlds);
+				yml.set("disabledWorlds", disabledWorlds);
 				yml.save(f);
 				j.sendMessage(msg.get("Commands.Messages.delWorld"));
 			}catch(Exception Ex){
@@ -401,7 +401,7 @@ public class MobMoney extends JavaPlugin{
 				File f=new File(cplugin+"/config.yml");
 				FileConfiguration yml=new YamlConfiguration();
 				yml.load(f);
-				setDefault(yml,"disabledWorlds",disabledWorlds);
+				yml.set("disabledWorlds", disabledWorlds);
 				yml.save(f);
 				j.sendMessage(msg.get("Commands.Messages.addWorld"));
 			}catch(Exception Ex){
@@ -436,6 +436,7 @@ public class MobMoney extends JavaPlugin{
     }
 
 	public static void sendMessage(String msg,Entity j){
+		if(msg == null || msg.isEmpty()) return;
         if(action)try{
             HotbarMessager.sendHotBarMessage(j,msg);
         }catch(Exception Ex){

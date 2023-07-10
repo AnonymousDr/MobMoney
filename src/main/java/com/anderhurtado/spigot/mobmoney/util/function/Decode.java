@@ -11,7 +11,7 @@ public class Decode extends Function {
     }
 
     private Decode() {
-        super("decode");
+        super("decode",3);
     }
 
     @Override
