@@ -90,12 +90,10 @@ public class MobMoney extends JavaPlugin{
 	private void setConfig()throws Exception{
 		if(!new File(cplugin, "strikeSystem.sample.yml").exists()) saveResource("strikeSystem.sample.yml", false);
 		File fConfig=new File(cplugin, "config.yml");
-		if(!fConfig.exists())fConfig.createNewFile();
-		FileConfiguration config=new YamlConfiguration();
-		
+
 		//Creando configuración
-        saveDefaultConfig();
-		config.load(fConfig);
+		if(!fConfig.exists()) saveResource("config.yml", true);
+		FileConfiguration config = getConfig();
 
 		//Cargando mobs
 		File fMobs = new File(cplugin, "mobs.yml");
@@ -150,7 +148,7 @@ public class MobMoney extends JavaPlugin{
 		if(!fidioma.exists()){
 			sendPluginMessage(ChatColor.RED+"Language file named '"+fidioma.getName()+"' not found! Using 'English.yml'");
 			config.set("Language","English");
-			config.save(fConfig);
+			saveConfig();
 			fidioma=new File(idiomas+"/English.yml");
 		}
 		com.anderhurtado.spigot.mobmoney.objets.User.limpiarUsuarios();
