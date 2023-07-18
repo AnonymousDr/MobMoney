@@ -9,11 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="[!] Fixed a bug related to random function&#10;[!] Fixed a bug related to empty messages&#10;[!] Fixed a bug related to the command /mobmoney disableworld &amp; /mobmoney enableworld">
+    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Minor bug fixes.">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/MobMoney.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/MobMoney.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/language/Catalan.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/language/Catalan.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/language/Dutch.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/language/Dutch.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/language/Spanish.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/language/Spanish.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -210,7 +212,15 @@
       <option name="project" value="LOCAL" />
       <updated>1688979391362</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Minor bug fixes.">
+      <option name="closed" value="true" />
+      <created>1689404830419</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1689404830419</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -233,6 +243,7 @@
     <MESSAGE value="Update 4.1" />
     <MESSAGE value="feat: Now allows negative values." />
     <MESSAGE value="[!] Fixed a bug related to random function&#10;[!] Fixed a bug related to empty messages&#10;[!] Fixed a bug related to the command /mobmoney disableworld &amp; /mobmoney enableworld" />
-    <option name="LAST_COMMIT_MESSAGE" value="[!] Fixed a bug related to random function&#10;[!] Fixed a bug related to empty messages&#10;[!] Fixed a bug related to the command /mobmoney disableworld &amp; /mobmoney enableworld" />
+    <MESSAGE value="Minor bug fixes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor bug fixes." />
   </component>
 </project>

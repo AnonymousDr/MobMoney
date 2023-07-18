@@ -100,6 +100,6 @@ public class DamagedEntity {
 
     public double getDamageFrom(Player killer) {
         if(damages == null) return 0;
-        return damages.get(killer);
+        return damages.getOrDefault(killer, 0d);
     }
 }
