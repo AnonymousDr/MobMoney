@@ -52,7 +52,8 @@ public class EventListener implements Listener {
             }
             if(j == null) return;
         }
-        AsyncMobMoneyEntityKilledEvent event = new AsyncMobMoneyEntityKilledEvent(j, m, 0, de);
+        CreatureSpawnEvent.SpawnReason spawnReason = EntityUtils.getSpawnReason(m);
+        AsyncMobMoneyEntityKilledEvent event = new AsyncMobMoneyEntityKilledEvent(j, m, 0, de, spawnReason);
         Bukkit.getScheduler().runTaskAsynchronously(instance, ()->callEvent(event));
     }
 
@@ -94,7 +95,8 @@ public class EventListener implements Listener {
             e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_WORLD);
         }
         else {
-            double reward = mob.calculateReward(j, de);
+            double reward = mob.calculateReward(e);
+            if(Double.isNaN(reward)) return;
             if(e.getKilledEntity() instanceof OfflinePlayer && withdrawFromPlayers) {
                 reward = Math.max(Math.min(reward, eco.getBalance((OfflinePlayer) e.getKilledEntity())),0);
                 e.setWithdrawFromEntity(reward);
@@ -106,7 +108,7 @@ public class EventListener implements Listener {
                 e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.PLAYER_WITH_NO_PRIVILEGES);
             }else if(disableCreative&& GameMode.CREATIVE.equals(j.getGameMode())) {
                 e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.CREATIVE);
-            }else if(bannedUUID.contains(m.getUniqueId().toString())){
+            }else if(spawnban.contains(e.getSpawnReason())){
                 e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.BANNED_ENTITY);
             }else if(!u.canGiveReward()){
                 e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.PLAYER_MAX_KILLS_REACHED);
@@ -179,22 +181,6 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void alSpawnear(CreatureSpawnEvent e){
-        CreatureSpawnEvent.SpawnReason spawnReason = e.getSpawnReason();
-        if(spawnban.contains(spawnReason)){
-            Entity E=e.getEntity();
-            bannedUUID.add(E.getUniqueId().toString());
-            try{
-                for(Entity P:E.getPassengers()) bannedUUID.add(P.getUniqueId().toString());
-            }catch(Throwable Ex){
-                @SuppressWarnings("deprecation")
-                Entity P=E.getPassenger();
-                if(P!=null)bannedUUID.add(P.getUniqueId().toString());
-            }
-        } else if(spawnReason != CreatureSpawnEvent.SpawnReason.DEFAULT) new DamagedEntity(e.getEntity(), spawnReason);
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageByEntityEvent e) {
         Entity d = e.getDamager();
@@ -210,7 +196,7 @@ public class EventListener implements Listener {
                         Player attacker = crackShotConnector.getVictim(e.getEntity());
                         if(attacker != null) d = attacker;
                     } else { //Entidad va a morir
-                        DamagedEntity.getOrCreateDamagedEntity(e.getEntity()).setDamageCached(e.getFinalDamage());
+                        DamagedEntity.getOrCreateDamagedEntity(e.getEntity()).setDamageCached(Math.min(e.getFinalDamage(), ((LivingEntity) e.getEntity()).getHealth()));
                     }
                 }
 
@@ -219,7 +205,7 @@ public class EventListener implements Listener {
                     if(owner != null) d = owner;
                 }
             }
-            if(d instanceof Player) DamagedEntity.getOrCreateDamagedEntity(e.getEntity()).damages((Player)d, e.getFinalDamage());
+            if(d instanceof Player) DamagedEntity.getOrCreateDamagedEntity(e.getEntity()).damages((Player)d, Math.min(e.getFinalDamage(), ((LivingEntity) e.getEntity()).getHealth()));
         }
     }
 

@@ -4,72 +4,90 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class DamagedEntity {
 
-    private static final HashMap<Entity, DamagedEntity> ENTITIES = new HashMap<>();
+    private static final HashMap<UUID, DamagedEntity> ENTITIES = new HashMap<UUID, DamagedEntity>() {
+        @Override
+        public DamagedEntity put(UUID key, DamagedEntity value) {
+            clean();
+            return super.put(key, value);
+        }
+
+        private long nextCheck;
+        private void clean() {
+            if(nextCheck < System.currentTimeMillis()) {
+                long now = System.currentTimeMillis();
+                nextCheck = now + 60_000;
+                synchronized (ENTITIES) {
+                    ENTITIES.entrySet().removeIf(m->m.getValue().expirationDate < now);
+                }
+            }
+        }
+    };
 
     @Nullable
     public static DamagedEntity getDamagedEntity(Entity e) {
-        return ENTITIES.get(e);
+        synchronized (ENTITIES) {
+            return ENTITIES.get(e.getUniqueId());
+        }
     }
 
     @NotNull
     public static DamagedEntity getOrCreateDamagedEntity(Entity e) {
-        return ENTITIES.getOrDefault(e, new DamagedEntity(e));
-    }
-
-    private HashMap<Player, Double> damages;
-    private final Entity entity;
-    private final CreatureSpawnEvent.SpawnReason spawnReason;
-    private double damageCached;
-
-    private DamagedEntity(Entity entity) {
-        this.entity = entity;
-        spawnReason = CreatureSpawnEvent.SpawnReason.DEFAULT;
-    }
-
-    public DamagedEntity(Entity entity, CreatureSpawnEvent.SpawnReason spawnReason) {
-        this.entity = entity;
-        this.spawnReason = spawnReason;
-        damages = new HashMap<>();
         synchronized (ENTITIES) {
-            ENTITIES.put(entity, this);
+            return ENTITIES.getOrDefault(e.getUniqueId(), new DamagedEntity(e));
         }
     }
 
-    public void damages(Player p, double damage) {
+    private HashMap<Player, Double> damages;
+    private final UUID entityId;
+    private double damageCached;
+    private final long expirationDate;
+
+    public DamagedEntity(Entity entity) {
+        this.entityId = entity.getUniqueId();
+        damages = new HashMap<>();
+        synchronized (ENTITIES) {
+            ENTITIES.put(entity.getUniqueId(), this);
+        }
+        expirationDate = System.currentTimeMillis() + 1_800_000;
+    }
+
+    public synchronized void damages(Player p, double damage) {
         if(damage == 0) return;
         if(damage > 0) {
             if(damages == null) {
                 damages = new HashMap<>();
                 synchronized (ENTITIES) {
-                    ENTITIES.put(entity, this);
+                    ENTITIES.put(entityId, this);
                 }
             }
             damages.put(p, damages.getOrDefault(p, 0d)+damage);
         } else regenerates(-damage);
     }
 
-    public void regenerates(double regeneration) {
+    public synchronized void regenerates(double regeneration) {
         if(damages != null) {
             damages.replaceAll((p,d)->{
-                if(d == null || d <= regeneration) return null;
+                if(d == null || d <= regeneration) return 0d;
                 return d-regeneration;
             });
-            for(Player p : damages.keySet()) if(damages.get(p) == null) damages.remove(p);
-            if(damages.isEmpty() && spawnReason != CreatureSpawnEvent.SpawnReason.DEFAULT) remove();
+            damages.entrySet().removeIf(e->e.getValue() == 0d);
+            if(damages.isEmpty()) remove();
         }
     }
 
-    public void setDamageCached(double damageCached) {
+    public synchronized void setDamageCached(double damageCached) {
         this.damageCached = damageCached;
         if(damages == null) {
             damages = new HashMap<>();
-            ENTITIES.put(entity, this);
+            synchronized (ENTITIES) {
+                ENTITIES.put(entityId, this);
+            }
         }
     }
 
@@ -84,22 +102,20 @@ public class DamagedEntity {
         }
     }
 
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public CreatureSpawnEvent.SpawnReason getSpawnReason() {
-        return spawnReason;
-    }
-
     public void remove() {
         synchronized (ENTITIES) {
-            ENTITIES.remove(entity, this);
+            ENTITIES.remove(entityId, this);
         }
     }
 
-    public double getDamageFrom(Player killer) {
+    public synchronized double getDamageFrom(Player killer) {
         if(damages == null) return 0;
         return damages.getOrDefault(killer, 0d);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof DamagedEntity) return ((DamagedEntity)obj).entityId.equals(entityId);
+        else return false;
     }
 }

@@ -33,7 +33,6 @@ import net.milkbowl.vault.economy.Economy;
 public class MobMoney extends JavaPlugin{
 	public static final HashMap<String,String> msg=new HashMap<>();
 	public static final List<SpawnReason> spawnban=new ArrayList<>();
-	public static final List<String> bannedUUID=new ArrayList<>();
 	public static List<String> disabledWorlds;
 	public static boolean disableCreative,enableTimer, debug, withdrawFromPlayers, affectMultiplierOnPlayers;
 	public static File cplugin;
@@ -63,21 +62,7 @@ public class MobMoney extends JavaPlugin{
 
             com.anderhurtado.spigot.mobmoney.objets.Metrics metrics=new com.anderhurtado.spigot.mobmoney.objets.Metrics(this);
 			metrics.addCustomChart(new Metrics.SimplePie("using_the_strikesystem", ()->ConditionalAction.getConditionals().isEmpty()?"No":"Yes"));
-
-			String s=Bukkit.getVersion().split("MC: ")[1].replace(")","");
-			if(!(s.startsWith("1")&&Integer.parseInt(s.split("\\.")[1])<13))Bukkit.getPluginManager().registerEvents(new com.anderhurtado.spigot.mobmoney.objets.DrownedProtection(),this);
 			Bukkit.getPluginManager().registerEvents(new EventListener(),this);
-			
-			//Cargando entiades baneadas
-			File f=new File(cplugin+"/entitybans.dat");
-			if(!f.exists())return;
-			FileConfiguration yml=new YamlConfiguration();
-			yml.load(f);
-			List<String> bans=yml.getStringList("Bans");
-			for(World w:Bukkit.getWorlds())for(Entity e:w.getEntities()){
-				String UUID=e.getUniqueId().toString();
-				if(bans.contains(UUID))bannedUUID.add(UUID);
-			}
 			
 			Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getOnlinePlayers().forEach(com.anderhurtado.spigot.mobmoney.objets.User::new),1);
 		}catch(Exception Ex){
@@ -183,7 +168,7 @@ public class MobMoney extends JavaPlugin{
 		}
 		debug = config.getBoolean("debug", false);
 		spawnban.clear();
-		for(SpawnReason sr:SpawnReason.values()) if(!mobs.getBoolean("general.payEntitiesSpawnedBy."+sr.name(), true)) spawnban.add(sr);
+		for(SpawnReason sr:SpawnReason.values()) if(!mobs.getBoolean("general.payEntitiesSpawnedBy."+sr.name().toLowerCase(), true)) spawnban.add(sr);
 		withdrawFromPlayers = entities.getBoolean("player.withdrawMoney");
 		affectMultiplierOnPlayers = entities.getBoolean("player.affectMultiplier");
 		//Cargando idioma
@@ -313,22 +298,7 @@ public class MobMoney extends JavaPlugin{
 	}
 	
 	public void onDisable(){
-		if(!bannedUUID.isEmpty()){
-			List<String> bans=new ArrayList<>();
-			for(World w:Bukkit.getWorlds())for(Entity e:w.getEntities()){
-				String UUID=e.getUniqueId().toString();
-				if(bannedUUID.contains(UUID))bans.add(UUID);
-			}if(bans.isEmpty())return;
-			try{
-				File f=new File(cplugin+"/entitybans.dat");
-				if(!f.exists())f.createNewFile();
-				FileConfiguration yml=new YamlConfiguration();
-				setDefault(yml,"Bans",bans);
-				yml.save(f);
-			}catch(Exception Ex){
-				Ex.printStackTrace();
-			}
-		}if(dailylimit!=null) dailylimit.save();
+		if(dailylimit!=null) dailylimit.save();
 		UserCache.getInstance().save();
 	}
 

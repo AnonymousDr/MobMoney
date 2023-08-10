@@ -285,8 +285,10 @@ public class DroppedCoinsAnimation implements RewardAnimation {
                                         if(lastIdRemoved != id) {
                                             for(World w:Bukkit.getWorlds()) for(Item i:w.getEntitiesByClass(Item.class)) {
                                                 if(i.getEntityId() == id) {
-                                                    i.remove();
-                                                    lastIdRemoved = id;
+                                                    try {
+                                                        i.remove();
+                                                        lastIdRemoved = id;
+                                                    } catch (Throwable ignoredT) {}
                                                     return;
                                                 }
                                             }

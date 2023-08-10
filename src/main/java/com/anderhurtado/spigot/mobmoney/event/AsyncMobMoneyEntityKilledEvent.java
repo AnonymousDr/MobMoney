@@ -5,6 +5,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Cancellable {
 
@@ -18,14 +19,16 @@ public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Can
     private final LivingEntity killedEntity;
     private double reward, multiplicator = 1, withdrawFromEntity;
     private final DamagedEntity damagedEntity;
+    private final CreatureSpawnEvent.SpawnReason spawnReason;
     private CancelReason cancelReason = CancelReason.NO_CANCELED;
 
-    public AsyncMobMoneyEntityKilledEvent(Player killer, LivingEntity killedEntity, double reward, DamagedEntity damagedEntity) {
+    public AsyncMobMoneyEntityKilledEvent(Player killer, LivingEntity killedEntity, double reward, DamagedEntity damagedEntity, CreatureSpawnEvent.SpawnReason spawnReason) {
         super(true);
         this.killer = killer;
         this.killedEntity = killedEntity;
         this.reward = reward;
         this.damagedEntity = damagedEntity;
+        this.spawnReason = spawnReason;
     }
 
     public Player getKiller() {
@@ -78,6 +81,10 @@ public class AsyncMobMoneyEntityKilledEvent extends MobMoneyEvent implements Can
 
     public double getFinalReward() {
         return Math.floor(reward * multiplicator * 100d)/100d;
+    }
+
+    public CreatureSpawnEvent.SpawnReason getSpawnReason() {
+        return spawnReason;
     }
 
     @Override

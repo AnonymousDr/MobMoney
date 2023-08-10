@@ -1,12 +1,14 @@
 package com.anderhurtado.spigot.mobmoney.objets;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
+import com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent;
 import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
 import com.anderhurtado.spigot.mobmoney.util.ColorManager;
 import com.anderhurtado.spigot.mobmoney.util.PreDefinedExpression;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -20,6 +22,10 @@ public class Mob{
 
 	public static Mob getEntity(String t){
 		return mobs.get(t.toLowerCase());
+	}
+
+	public static Mob getEntity(EntityType t) {
+		return getEntity(t.name());
 	}
 
 	public static void clearMobs(){
@@ -71,9 +77,13 @@ public class Mob{
 		otherPrices.put(spawnReason, convertToExpression(formula));
 	}
 
-	public double calculateReward(Player killer, DamagedEntity damagedVictim) {
-		Entity killed = damagedVictim.getEntity();
-		final Expression price = otherPrices.getOrDefault(damagedVictim.getSpawnReason(), this.price);
+	public boolean hasCustomReward(CreatureSpawnEvent.SpawnReason spawnReason) {
+		return otherPrices.containsKey(spawnReason);
+	}
+
+	public double calculateReward(AsyncMobMoneyEntityKilledEvent e) {
+		final Expression price = otherPrices.getOrDefault(e.getSpawnReason(), this.price);
+		LivingEntity killed = e.getKilledEntity();
 		synchronized (price) {
 			if(killed instanceof Player && price.getVariableNames().contains("money")) {
 				price.setVariable("money", MobMoney.eco.getBalance((Player)killed));
@@ -87,12 +97,12 @@ public class Mob{
 			price.setVariable("MMlevel", level);
 
 			level = defaultLevel;
-			if(MobMoney.levelledMobsConnector != null && killed instanceof LivingEntity) {
-				level = MobMoney.levelledMobsConnector.getLevel((LivingEntity) killed);
+			if(MobMoney.levelledMobsConnector != null) {
+				level = MobMoney.levelledMobsConnector.getLevel(killed);
 			}
 			price.setVariable("LMlevel", level);
 
-			price.setVariable("damage", damagedVictim.getDamageFrom(killer));
+			price.setVariable("damage", e.getDamagedEntity().getDamageFrom(e.getKiller()));
 			if(negativeValues) return price.evaluate();
 			else return Math.max(price.evaluate(), 0);
 		}
