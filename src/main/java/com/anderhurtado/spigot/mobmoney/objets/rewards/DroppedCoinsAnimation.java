@@ -57,6 +57,7 @@ public class DroppedCoinsAnimation implements RewardAnimation {
         INTERNAL_BOOK_META.setAuthor("Mob Money plugin by Anonymous_Dr");
         INTERNAL_BOOK_META.setLore(Collections.singletonList("INTERNAL BOOK. DESTROY"));
         INTERNAL_BOOK_META.setTitle("MOBMONEY INTERNAL OBJECT");
+        INTERNAL_BOOK_META.setDisplayName("MOBMONEY INTERNAL OBJECT");
         try{
             INTERNAL_BOOK_META.setGeneration(BookMeta.Generation.TATTERED);
         } catch (Throwable ignored) {

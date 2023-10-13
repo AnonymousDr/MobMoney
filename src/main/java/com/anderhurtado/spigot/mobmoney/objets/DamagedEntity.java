@@ -39,7 +39,9 @@ public class DamagedEntity {
     @NotNull
     public static DamagedEntity getOrCreateDamagedEntity(Entity e) {
         synchronized (ENTITIES) {
-            return ENTITIES.getOrDefault(e.getUniqueId(), new DamagedEntity(e));
+            DamagedEntity de = ENTITIES.get(e.getUniqueId());
+            if(de == null) de = new DamagedEntity(e);
+            return de;
         }
     }
 
