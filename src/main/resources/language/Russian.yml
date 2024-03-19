@@ -1,0 +1,29 @@
+Events:
+  hunt: '&aВы охотились на &b%entity%&a и получили %reward%&a!'
+  MaxKillsReached: '&cВы достигли предела мобов, которых вы можете убить!'
+  entityBanned: '&cМоб, на которого вы охотились, запрещено.'
+  dailyLimitReached: '&cВы достигли лимита денег, который можете получить сегодня. (%limit%$)'
+  withdrawnByKill: '&cВы были убиты игроком &e%player%&c и вы потеряли &e%reward%&c.'
+Commands:
+  noPermission: '&cУ вас недостаточно привилегий для этого.'
+  onlyPlayers: '&cЭта команда может быть выполнена только игроками в игре.'
+  invalidArguments: '&cНедопустимые аргументы.'
+  arguments:
+    reload: reload
+    disableWorld: disableworld
+    enableWorld: enableworld
+    toggle: toggle
+  Messages:
+    enabledMessages: '&aТеперь вы будете получать сообщения!'
+    disabledMessages: '&6Теперь вы не будете получать сообщения!'
+    addWorld: '&aМир включен!'
+    delWorld: '&aМир выключен!'
+    CurrentlyWorldAdded: '&6Мир уже в списке!'
+    WorldNotFinded: '&cМир не был найден!'
+  Use:
+    reload: '&aПерезагрузить конфигурацию: &b/mobmoney reload'
+    enableWorld: '&aВключить мир: &b/mobmoney enableworld <World>'
+    disableWorld: '&aВыключить мир: &b/mobmoney disableworld <World>'
+    toggle: '&aВключить/выключить сообщения: &b/mobmoney toggle'
+    
+ # Перевод от Geek Guru

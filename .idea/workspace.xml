@@ -9,12 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Bug fixes.&#10;Now to ban entities, or give different amounts of money, Paper is required.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-    </list>
+    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Bug fixes.&#10;Now to ban entities, or give different amounts of money, Paper is required." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
