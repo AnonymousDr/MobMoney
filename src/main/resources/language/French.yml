@@ -1,0 +1,27 @@
+Events:
+  hunt: '&8Vous avez tué un.e &4%entity%&8 et recevez &6%reward%&8!'
+  MaxKillsReached: '&8Vous avez atteint la &4limite d''entités maximum&8!'
+  entityBanned: '&4L''entité&8 que vous venez de &4tuer&8 était &4blacklistée&8.'
+  dailyLimitReached: '&8Vous avez atteint la &4limite&8 de &6$pectacles&8 pour aujourd''hui (&6%limit% &8max).'
+  withdrawnByKill: '&8Vous avez été tué par &4%player%&8 et avez perdu &6%reward%&8.'
+Commands:
+  noPermission: '&cVous n''avez pas la permission de faire cela.'
+  onlyPlayers: '&cCette commande peut uniquement être effectuée par des joueur.euse.s.'
+  invalidArguments: '&cArguments invalides.'
+  arguments:
+    reload: reload
+    disableWorld: disableworld
+    enableWorld: enableworld
+    toggle: toggle
+  Messages:
+    enabledMessages: '&8Vous recevrez désormais les messages!'
+    disabledMessages: '&6Vous ne recevrez désormais plus les messages!'
+    addWorld: '&8Monde activé!'
+    delWorld: '&8Monde désactivé!'
+    CurrentlyWorldAdded: '&6Le monde était déjà dans la liste!'
+    WorldNotFinded: '&cLe monde n''a pas été trouvé!'
+  Use:
+    reload: '&8Configuration rechargée: &b/mobmoney reload'
+    enableWorld: '&8Monde activé: &b/mobmoney enableworld <World>'
+    disableWorld: '&8Monde désactivé: &b/mobmoney disableworld <World>'
+    toggle: '&8Activer/désactiver les messages: &b/mobmoney toggle'

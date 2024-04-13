@@ -9,7 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Bug fixes.&#10;Now to ban entities, or give different amounts of money, Paper is required." />
+    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Added Russian language">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -228,7 +230,15 @@
       <option name="project" value="LOCAL" />
       <updated>1691685684887</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Added Russian language">
+      <option name="closed" value="true" />
+      <created>1710887234416</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1710887234416</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -254,7 +264,8 @@
     <MESSAGE value="Minor bug fixes." />
     <MESSAGE value="Bug fixes related with LevelledMobs." />
     <MESSAGE value="Bug fixes.&#10;Now to ban entities, or give different amounts of money, Paper is required." />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug fixes.&#10;Now to ban entities, or give different amounts of money, Paper is required." />
+    <MESSAGE value="Added Russian language" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Russian language" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
