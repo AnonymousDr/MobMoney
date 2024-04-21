@@ -38,33 +38,45 @@ public class DailyLimit implements Serializable {
         CleanableArrayList<Kill> list;
         if(users.containsKey(user)) {
             list = users.get(user);
-            list.doCleaning();
+            synchronized (list) {
+                list.doCleaning();
+            }
         } else users.put(user, list = new CleanableArrayList<>());
 
-        list.add(new Kill(value));
+        synchronized (list) {
+            list.add(new Kill(value));
+        }
         return sum(list);
     }
 
     public double getCount(UUID user) {
         CleanableArrayList<Kill> list = users.get(user);
         if(list == null) return 0;
-        list.doCleaning();
-        if(list.isEmpty()) {
-            users.remove(user);
-            return 0;
+        synchronized (list) {
+            list.doCleaning();
+            if(list.isEmpty()) {
+                users.remove(user);
+                return 0;
+            }
         }
-        else return sum(list);
+        return sum(list);
     }
 
     private double sum(CleanableArrayList<Kill> list) {
         double sum = 0;
-        for(Kill kill : list) sum += kill.value;
+        synchronized (list) {
+            for(Kill kill : list) sum += kill.value;
+        }
         return sum;
     }
 
     public void validate() {
         users.values().forEach(CleanableArrayList::doCleaning);
-        users.entrySet().removeIf(entry->entry.getValue().isEmpty());
+        users.entrySet().removeIf(entry->{
+            synchronized (entry.getValue()) {
+                return entry.getValue().isEmpty();
+            }
+        });
     }
 
     public void save() {
