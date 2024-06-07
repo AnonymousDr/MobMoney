@@ -8,14 +8,9 @@ import com.anderhurtado.spigot.mobmoney.objets.*;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.Timer;
 import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
-import com.anderhurtado.spigot.mobmoney.util.ColorManager;
+import com.anderhurtado.spigot.mobmoney.util.*;
 import com.anderhurtado.spigot.mobmoney.util.EventListener;
-import com.anderhurtado.spigot.mobmoney.util.PreDefinedExpression;
-import com.anderhurtado.spigot.mobmoney.util.UserCache;
-import com.anderhurtado.spigot.mobmoney.util.softdepend.CrackShotConnector;
-import com.anderhurtado.spigot.mobmoney.util.softdepend.LevelledMobsConnector;
-import com.anderhurtado.spigot.mobmoney.util.softdepend.MyPetsConnector;
-import com.anderhurtado.spigot.mobmoney.util.softdepend.MythicMobsConnector;
+import com.anderhurtado.spigot.mobmoney.util.softdepend.*;
 import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,6 +40,8 @@ public class MobMoney extends JavaPlugin{
 	public static MyPetsConnector myPetsConnector;
 	public static MythicMobsConnector mythicMobsConnector;
 	public static LevelledMobsConnector levelledMobsConnector;
+	public static long multiplicatorExpiration;
+	public static float multiplicatorValue;
 
 	public static void sendPluginMessage(String msg) {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA+"[MobMoney] "+msg);
@@ -78,6 +75,7 @@ public class MobMoney extends JavaPlugin{
 
 		//Creando configuración
 		if(!fConfig.exists()) saveResource("config.yml", true);
+		reloadConfig();
 		FileConfiguration config = getConfig();
 
 		//Cargando mobs
@@ -180,6 +178,8 @@ public class MobMoney extends JavaPlugin{
 			value = idioma.getString(v);
 			if(value != null) msg.put(v,ColorManager.translateColorCodes(value));
 		}
+		multiplicatorExpiration = config.getLong("temporalMultiplicator.expiration");
+		multiplicatorValue = (float)config.getDouble("temporalMultiplicator.value", 1);
 
 		//Loading soft depends
 		if(config.getBoolean("hooks.CrackShot")) {
@@ -229,6 +229,9 @@ public class MobMoney extends JavaPlugin{
 				}
 			}
 		} else levelledMobsConnector = null;
+		if(config.getBoolean("hooks.PlaceholderAPI",true)) {
+			if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new PlaceholderConnector().register();
+		}
 
 		ConditionalAction.resetConditionals();
 		File strikeSystemFile = new File(cplugin, "strikeSystem.yml");
@@ -310,6 +313,7 @@ public class MobMoney extends JavaPlugin{
 			if(j.hasPermission("mobmoney.enableworld")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.enableWorld"));
 			if(j.hasPermission("mobmoney.disableworld")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.disableWorld"));
 			if(j.hasPermission("mobmoney.toggle")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.toggle"));
+			if(j.hasPermission("mobmoney.temporalMultiplier.set")) j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
 			if(!permiso)j.sendMessage(msg.get("Commands.noPermission"));
 			return true;
 		}String arg0=args[0];
@@ -391,11 +395,65 @@ public class MobMoney extends JavaPlugin{
 				u.setReceiveOnDeath(true);
 				j.sendMessage(msg.get("Commands.Messages.enabledMessages"));
 			}return true;
-		}j.sendMessage(msg.get("Commands.invalidArguments"));
+		}
+		if(arg0.equalsIgnoreCase(msg.getOrDefault("Commands.arguments.temporalMultiplier", "multiplier"))) {
+			if(!j.hasPermission("mobmoney.temporalMultiplier")) {
+				j.sendMessage(msg.get("Commands.noPermission"));
+				return true;
+			}
+			if(args.length == 1) {
+				if(multiplicatorExpiration > System.currentTimeMillis()) {
+					String time = TimeUtils.convertToString(multiplicatorExpiration-System.currentTimeMillis());
+					j.sendMessage(msg.getOrDefault("Commands.Messages.temporalMultiplierTimeAvailable",ChatColor.GREEN+"Remaining time of %multiplicator%x available: %time%").replace("%multiplicator%",String.valueOf(Math.round(multiplicatorValue*100)/100F)).replace("%time%",time));
+				} else {
+					j.sendMessage(msg.getOrDefault("Commands.Messages.temporalMultiplierNotAvailable",ChatColor.RED+"There is not temporal multiplier at this moment."));
+				}
+				return true;
+			} else {
+				if(!j.hasPermission("mobmoney.temporalMultiplier.set")) {
+					j.sendMessage(msg.get("Commands.noPerimssion"));
+					return true;
+				}
+				if(args.length < 3) {
+					j.sendMessage(msg.get("Commands.invalidArguments"));
+					j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
+					return true;
+				}
+				long expiration;
+				try {
+					expiration = TimeUtils.convertToTime(args[1]);
+					if(expiration <= 0) throw new RuntimeException();
+					expiration += System.currentTimeMillis();
+				} catch (Exception Ex) {
+					j.sendMessage(msg.get("Commands.invalidArguments"));
+					j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
+					return true;
+				}
+				float multiplicator;
+				try {
+					multiplicator = Float.parseFloat(args[2]);
+				} catch (Exception Ex) {
+					j.sendMessage(msg.get("Commands.invalidArguments"));
+					j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
+					return true;
+				}
+				multiplicatorExpiration = expiration;
+				multiplicatorValue = multiplicator;
+				reloadConfig();
+				FileConfiguration config = getConfig();
+				config.set("temporalMultiplicator.expiration", expiration);
+				config.set("temporalMultiplicator.value", multiplicator);
+				saveConfig();
+				j.sendMessage(msg.getOrDefault("Commands.Messages.temporalMultiplierSet",ChatColor.GREEN+"The temporal multiplier has been defined!"));
+				return true;
+			}
+		}
+		j.sendMessage(msg.get("Commands.invalidArguments"));
 		if(j.hasPermission("mobmoney.reload"))j.sendMessage(msg.get("Commands.Use.reload"));
 		if(j.hasPermission("mobmoney.enableworld"))j.sendMessage(msg.get("Commands.Use.enableWorld"));
 		if(j.hasPermission("mobmoney.disableworld"))j.sendMessage(msg.get("Commands.Use.disableWorld"));
 		if(j.hasPermission("mobmoney.toggle"))j.sendMessage(msg.get("Commands.Use.toggle"));
+		if(j.hasPermission("mobmoney.temporalMultiplier.set")) j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
 		return true;
 	}
 

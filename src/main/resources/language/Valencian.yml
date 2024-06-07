@@ -9,10 +9,11 @@ Commands:
   onlyPlayers: '&cAquest comandament únicament pot ser executat per jugadors dins del joc.'
   invalidArguments: '&cArguments invàlids.'
   arguments:
-    reload: recarregar
-    disableWorld: deshabilitarmon
-    enableWorld: habilitarmon
+    reload: reload
+    disableWorld: disableworld
+    enableWorld: enableworld
     toggle: toggle
+    temporalMultiplier: multiplier
   Messages:
     enabledMessages: '&aAra rebràs missatges!'
     disabledMessages: '&6Ara no rebràs missatges!'
@@ -20,8 +21,12 @@ Commands:
     delWorld: '&aMón deshabilitat!'
     CurrentlyWorldAdded: '&6El món ja està a la llista!'
     WorldNotFinded: '&cNo es troba el món!'
+    temporalMultiplierSet: '&aS''ha definit el multiplicador temporal!'
+    temporalMultiplierTimeAvailable: '&aTemps restant del multiplicador x%multiplicator%: %time%'
+    temporalMultiplierNotAvailable: '&cAra mateix no hi hà cap multiplicador disponible.'
   Use:
     reload: '&aRecarregar la configuració: &b/mobmoney recarregar'
     enableWorld: '&aHabilitar món: &b/mobmoney habilitarmon <Món>'
     disableWorld: '&aDeshabilitar món: &b/mobmoney deshabilitarmon <Món>'
     toggle: '&aDeshabilitar missatges: &b/mobmoney toggle'
+    temporalMultiplier: '&aEstablir multiplicador temporal:&b /mobmoney multiplier <Duració:[1d23h15m31s]> <Multiplicador:1.5>'

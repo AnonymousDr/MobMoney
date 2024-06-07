@@ -91,6 +91,8 @@ public class EventListener implements Listener {
         if(affectMultiplierOnPlayers || e.getKilledEntity().getType() != EntityType.PLAYER) e.setMultiplicator(u.getMultiplicator());
         else e.setMultiplicator(1);
 
+        if(multiplicatorExpiration >= System.currentTimeMillis()) e.setMultiplicator(e.getMultiplicator() * multiplicatorValue);
+
         if(disabledWorlds.contains(m.getWorld().getName())) {
             e.cancel(AsyncMobMoneyEntityKilledEvent.CancelReason.DISABLED_WORLD);
         }

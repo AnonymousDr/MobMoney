@@ -13,6 +13,7 @@ Commands:
     disableWorld: disableworld
     enableWorld: enableworld
     toggle: toggle
+    temporalMultiplier: multiplier
   Messages:
     enabledMessages: '&aNow you will receive messages!'
     disabledMessages: '&6Now you will not receive messages!'
@@ -20,8 +21,12 @@ Commands:
     delWorld: '&aWorld disabled!'
     CurrentlyWorldAdded: '&6The world was already in the list!'
     WorldNotFinded: '&cThe world has not been found!'
+    temporalMultiplierSet: '&aThe temporal multiplier has been defined!'
+    temporalMultiplierTimeAvailable: '&aRemaining time of %multiplicator%x available: %time%'
+    temporalMultiplierNotAvailable: '&cThere is not temporal multiplier at this moment.'
   Use:
     reload: '&aReload config: &b/mobmoney reload'
     enableWorld: '&aEnable world: &b/mobmoney enableworld <World>'
     disableWorld: '&aDisable world: &b/mobmoney disableworld <World>'
     toggle: '&aToggle messages: &b/mobmoney toggle'
+    temporalMultiplier: '&aSet a temporal multiplier:&b /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>'

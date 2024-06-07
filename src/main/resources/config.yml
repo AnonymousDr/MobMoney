@@ -45,3 +45,4 @@ hooks: # Enabled hooks (if plugin its found)
   MyPets: true
   MythicMobs: true
   LevelledMobs: true
+  PlaceholderAPI: true

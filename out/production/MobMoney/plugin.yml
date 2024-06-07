@@ -1,6 +1,6 @@
 name: MobMoney
 main: com.anderhurtado.spigot.mobmoney.MobMoney
-version: 5.1.3
+version: 5.1.4
 author: Anonymous_Dr
 description: Kill mobs to get money.
 depend: [Vault]
@@ -10,6 +10,7 @@ softdepend:
  - MythicMobs
  - LevelledMobs
  - ProtocolLib
+ - PlaceholderAPI
 api-version: 1.13
 commands:
  mobmoney:
@@ -31,3 +32,9 @@ permissions:
  mobmoney.toggle:
   description: Give's permission to toggle the message received at kill a entity to get money.
   default: true
+ mobmoney.temporalMultiplier:
+   description: Allows the user to view the available time of the multiplier
+   default: true
+ mobmoney.temporalMultiplier.set:
+  description: Allows the user to set the temporal multiplier
+  default: op
