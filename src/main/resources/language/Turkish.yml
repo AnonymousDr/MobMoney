@@ -1,0 +1,32 @@
+Events:
+  hunt: '&aBir &b%entity%&a avladınız ve %reward%&a ödül kazandınız!'
+  MaxKillsReached: '&cÖldürebileceğiniz varlıkların limitine ulaştınız!'
+  entityBanned: '&cAvcılık yasaklanmıştır.'
+  dailyLimitReached: '&cBugün alabileceğiniz maksimum para limitine ulaştınız. (%limit%$)'
+  withdrawnByKill: '&c%player% tarafından öldürüldünüz ve %reward% kaybettiniz.'
+Commands:
+  noPermission: '&cBunun için yeterli yetkiniz yok.'
+  onlyPlayers: '&cBu komut sadece oyun içi oyuncular tarafından kullanılabilir.'
+  invalidArguments: '&cGeçersiz argümanlar.'
+  arguments:
+    reload: reload
+    disableWorld: disableworld
+    enableWorld: enableworld
+    toggle: toggle
+    temporalMultiplier: multiplier
+  Messages:
+    enabledMessages: '&aArtık mesajlar alacaksınız!'
+    disabledMessages: '&6Artık mesajlar almayacaksınız!'
+    addWorld: '&aDünya etkinleştirildi!'
+    delWorld: '&aDünya devre dışı bırakıldı!'
+    CurrentlyWorldAdded: '&6Dünya zaten listeye eklenmiş!'
+    WorldNotFinded: '&cDünya bulunamadı!'
+    temporalMultiplierSet: '&aGeçici çarpan ayarlandı!'
+    temporalMultiplierTimeAvailable: '&aKalan süre %multiplicator%x: %time%'
+    temporalMultiplierNotAvailable: '&cŞu anda geçici bir çarpan yok.'
+  Use:
+    reload: '&aYapılandırmayı yeniden yükle: &b/mobmoney reload'
+    enableWorld: '&aDünyayı etkinleştir: &b/mobmoney enableworld <Dünya>'
+    disableWorld: '&aDünyayı devre dışı bırak: &b/mobmoney disableworld <Dünya>'
+    toggle: '&aMesajları aç/kapat: &b/mobmoney toggle'
+    temporalMultiplier: '&aGeçici bir çarpan ayarla: &b /mobmoney multiplier <Süre:[1g23s15d31s]> <Çarpan:1.5>'
