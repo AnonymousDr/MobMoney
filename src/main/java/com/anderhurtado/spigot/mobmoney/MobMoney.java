@@ -40,6 +40,7 @@ public class MobMoney extends JavaPlugin{
 	public static MyPetsConnector myPetsConnector;
 	public static MythicMobsConnector mythicMobsConnector;
 	public static LevelledMobsConnector levelledMobsConnector;
+	public static AuraMobsConnector auraMobsConnector;
 	public static long multiplicatorExpiration;
 	public static float multiplicatorValue;
 
@@ -117,6 +118,9 @@ public class MobMoney extends JavaPlugin{
 		if(!new File(base, "Chinese.yml").exists()) saveResource("language/Chinese.yml", false);
 		if(!new File(base, "Catalan.yml").exists()) saveResource("language/Catalan.yml", false);
 		if(!new File(base, "Valencian.yml").exists()) saveResource("language/Valencian.yml", false);
+		if(!new File(base, "French.yml").exists()) saveResource("language/French.yml", false);
+		if(!new File(base, "Russian.yml").exists()) saveResource("language/Russian.yml", false);
+		if(!new File(base, "Turkish.yml").exists()) saveResource("language/Turkish.yml", false);
 		
 		// Loading config
 		disabledWorlds = config.getStringList("disabledWorlds");
@@ -231,6 +235,10 @@ public class MobMoney extends JavaPlugin{
 		} else levelledMobsConnector = null;
 		if(config.getBoolean("hooks.PlaceholderAPI",true)) {
 			if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new PlaceholderConnector().register();
+		}
+
+		if(config.getBoolean("hooks.AuraMobs", true)) {
+			if(Bukkit.getPluginManager().isPluginEnabled("AuraMobs")) auraMobsConnector = new AuraMobsConnector();
 		}
 
 		ConditionalAction.resetConditionals();

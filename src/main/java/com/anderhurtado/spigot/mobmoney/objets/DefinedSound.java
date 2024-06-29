@@ -1,5 +1,7 @@
 package com.anderhurtado.spigot.mobmoney.objets;
 
+import com.anderhurtado.spigot.mobmoney.MobMoney;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -20,7 +22,8 @@ public class DefinedSound {
     }
 
     public void play(Player player) {
-        player.playSound(player.getLocation(), sound, volume, pitch);
+        if(Bukkit.isPrimaryThread()) player.playSound(player.getLocation(), sound, volume, pitch);
+        else Bukkit.getScheduler().runTask(MobMoney.instance, ()->play(player));
     }
 
     public Sound getSound() {

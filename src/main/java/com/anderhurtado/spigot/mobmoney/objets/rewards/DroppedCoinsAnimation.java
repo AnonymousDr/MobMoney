@@ -552,13 +552,13 @@ public class DroppedCoinsAnimation implements RewardAnimation {
                     pickUp(killer);
                     return;
                 }
-                if(canCollect(killer)) {
+                if(canCollect(killer, killer)) {
                     pickUp(killer);
                     return;
                 }
                 if(recollectableByEveryone) for(Player p : item.getWorld().getPlayers()) {
                     if(p.equals(killer)) continue;
-                    if(canCollect(p)) {
+                    if(canCollect(p, killer)) {
                         pickUp(p);
                         return;
                     }
@@ -598,8 +598,9 @@ public class DroppedCoinsAnimation implements RewardAnimation {
             Bukkit.getScheduler().runTask(MobMoney.instance, ()->item.remove());
         }
 
-        private boolean canCollect(Player p) {
+        private boolean canCollect(Player p, @Nullable Player owner) {
             if(p.getGameMode().equals(GameMode.SPECTATOR)) return false;
+            if(owner != null && !owner.canSee(p)) return false;
             EntityBox bb;
             if(p.getVehicle() != null && !p.getVehicle().isDead()) {
                 bb = EntityBox.getFromEntity(p).grow(EntityBox.getFromEntity(p.getVehicle())).grow(1, 0, 1);

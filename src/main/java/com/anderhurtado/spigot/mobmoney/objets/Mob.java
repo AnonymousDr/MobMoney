@@ -68,7 +68,7 @@ public class Mob{
 
 	private Expression convertToExpression(String formula) {
 		ExpressionBuilder expressionBuilder = new PreDefinedExpression(formula);
-		expressionBuilder.variables("damage", "MMlevel", "LMlevel");
+		expressionBuilder.variables("damage", "MMlevel", "LMlevel", "AuraMobsLevel");
 		if(entityType.equalsIgnoreCase("player")) expressionBuilder.variable("money");
 		return expressionBuilder.build();
 	}
@@ -101,6 +101,12 @@ public class Mob{
 				level = MobMoney.levelledMobsConnector.getLevel(killed);
 			}
 			price.setVariable("LMlevel", level);
+
+			level = defaultLevel;
+			if(MobMoney.auraMobsConnector != null) {
+				level = MobMoney.auraMobsConnector.getLevel(killed);
+			}
+			price.setVariable("AuraMobsLevel", level);
 
 			price.setVariable("damage", e.getDamagedEntity().getDamageFrom(e.getKiller()));
 			if(negativeValues) return price.evaluate();

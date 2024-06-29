@@ -1,6 +1,6 @@
 name: MobMoney
 main: com.anderhurtado.spigot.mobmoney.MobMoney
-version: 5.1.4
+version: 5.1.6
 author: Anonymous_Dr
 description: Kill mobs to get money.
 depend: [Vault]
@@ -11,6 +11,7 @@ softdepend:
  - LevelledMobs
  - ProtocolLib
  - PlaceholderAPI
+ - AuraMobs
 api-version: 1.13
 commands:
  mobmoney:

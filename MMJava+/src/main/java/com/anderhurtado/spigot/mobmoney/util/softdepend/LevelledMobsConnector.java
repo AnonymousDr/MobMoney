@@ -1,11 +1,14 @@
 package com.anderhurtado.spigot.mobmoney.util.softdepend;
 
-import me.lokka30.levelledmobs.LevelledMobs;
 import org.bukkit.entity.LivingEntity;
 
 public class LevelledMobsConnector {
 
     public int getLevel(LivingEntity e) {
-        return LevelledMobs.getInstance().levelInterface.getLevelOfMob(e);
+        try {
+            return me.lokka30.levelledmobs.LevelledMobs.getInstance().levelInterface.getLevelOfMob(e);
+        } catch (NoClassDefFoundError NCDFEr) {
+            return io.github.arcaneplugins.levelledmobs.LevelledMobs.getInstance().getLevelInterface().getLevelOfMob(e);
+        }
     }
 }

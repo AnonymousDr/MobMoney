@@ -3,6 +3,8 @@
     <CLASSES>
       <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/LevelledMobs-3.10.3 b763.jar!/" />
       <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/MythicMobs-5.3.1.jar!/" />
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/LevelledMobs-4.0.3.1.b19.jar!/" />
+      <root url="jar://E:/Datos/Plugins/APIs/Java/Spigot/Plugins/AuraMobs-2.0.5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
