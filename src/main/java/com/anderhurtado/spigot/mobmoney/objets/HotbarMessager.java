@@ -34,27 +34,25 @@ public class HotbarMessager {
      */
     private static Object CHAT_MESSAGE_TYPE_ENUM_OBJECT;
 
-    /**
-     * This is the server version. This is how we know the server version.
-     */
-    private static final String SERVER_VERSION;
     static {
-        // This gets the server version.
-        String name = Bukkit.getServer().getClass().getName();
-        name = name.substring(name.indexOf("craftbukkit.")
-                + "craftbukkit.".length());
-        name = name.substring(0, name.indexOf("."));
-        SERVER_VERSION = name;
-
         try {
+            // This gets the server version.
+            String name = Bukkit.getServer().getClass().getName();
+            name = name.substring(name.indexOf("craftbukkit.")
+                    + "craftbukkit.".length());
+            name = name.substring(0, name.indexOf("."));
+            /**
+             * This is the server version. This is how we know the server version.
+             */
+            String serverVersion = name;
             // This here sets the class fields.
             CRAFTPLAYERCLASS = Class.forName("org.bukkit.craftbukkit."
-                    + SERVER_VERSION + ".entity.CraftPlayer");
+                    + serverVersion + ".entity.CraftPlayer");
             PACKET_PLAYER_CHAT_CLASS = Class.forName("net.minecraft.server."
-                    + SERVER_VERSION + ".PacketPlayOutChat");
+                    + serverVersion + ".PacketPlayOutChat");
             PACKET_CLASS = Class.forName("net.minecraft.server."
-                    + SERVER_VERSION + ".Packet");
-            ICHATCOMP = Class.forName("net.minecraft.server." + SERVER_VERSION
+                    + serverVersion + ".Packet");
+            ICHATCOMP = Class.forName("net.minecraft.server." + serverVersion
                     + ".IChatBaseComponent");
             GETHANDLE = CRAFTPLAYERCLASS.getMethod("getHandle");
             PLAYERCONNECTION = GETHANDLE.getReturnType()
@@ -65,7 +63,7 @@ public class HotbarMessager {
                         .getConstructor(ICHATCOMP, byte.class);
             } catch (NoSuchMethodException e) {
                 CHAT_MESSAGE_TYPE_CLASS = Class.forName("net.minecraft.server."
-                        + SERVER_VERSION + ".ChatMessageType");
+                        + serverVersion + ".ChatMessageType");
                 CHAT_MESSAGE_TYPE_ENUM_OBJECT = CHAT_MESSAGE_TYPE_CLASS
                         .getEnumConstants()[2];
 
@@ -74,7 +72,7 @@ public class HotbarMessager {
             }
 
             CHATMESSAGE = Class.forName("net.minecraft.server."
-                    + SERVER_VERSION + ".ChatMessage");
+                    + serverVersion + ".ChatMessage");
 
             CHATMESSAGE_CONSTRUCTOR = CHATMESSAGE.getConstructor(
                     String.class, Object[].class);
