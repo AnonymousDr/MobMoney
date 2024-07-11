@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import com.anderhurtado.spigot.mobmoney.MobMoney;
 import com.anderhurtado.spigot.mobmoney.util.UserCache;
-import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.jetbrains.annotations.NotNull;
 
 public class User{
 

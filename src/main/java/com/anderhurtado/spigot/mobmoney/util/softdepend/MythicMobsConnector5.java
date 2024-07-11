@@ -5,7 +5,7 @@ import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Entity;
 
-public class MythicMobsConnector {
+public class MythicMobsConnector5 implements MythicMobsConnector {
 
     MythicBukkit myMobs = MythicBukkit.inst();
 

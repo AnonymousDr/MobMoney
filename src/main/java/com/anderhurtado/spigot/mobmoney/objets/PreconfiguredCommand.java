@@ -1,13 +1,11 @@
 package com.anderhurtado.spigot.mobmoney.objets;
 
-import com.sun.istack.internal.NotNull;
-
 public class PreconfiguredCommand {
 
     private final String command;
     private final ExecutionType executionType;
 
-    public PreconfiguredCommand(@NotNull String command, @NotNull ExecutionType executionType) throws NullPointerException{
+    public PreconfiguredCommand(String command, ExecutionType executionType) throws NullPointerException{
         if(command == null) throw new NullPointerException("Command cannot be null!");
         if(executionType == null) throw new NullPointerException("ExecutionType cannot be null!");
         this.command = command;

@@ -213,7 +213,7 @@ public class MobMoney extends JavaPlugin{
 		if(config.getBoolean("hooks.MythicMobs")) {
 			if(myPetsConnector == null) {
 				if(Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) try {
-					mythicMobsConnector = new MythicMobsConnector();
+					mythicMobsConnector = MythicMobsConnector.getInstance();
 					sendPluginMessage(ChatColor.GREEN+"MythicMobs detected and connected!");
 				} catch (Throwable t) {
 					t.printStackTrace();

@@ -16,7 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/src/bin" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="openjdk-21" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="net.objecthunter.exp4j" level="project" />
     <orderEntry type="library" name="Plugins" level="project" />
@@ -31,5 +31,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="PluginsJava+" level="project" />
   </component>
 </module>

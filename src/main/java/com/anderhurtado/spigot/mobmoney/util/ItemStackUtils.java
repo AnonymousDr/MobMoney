@@ -1,10 +1,12 @@
 package com.anderhurtado.spigot.mobmoney.util;
 
+import com.anderhurtado.spigot.mobmoney.MobMoney;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 public class ItemStackUtils {
 
@@ -13,7 +15,12 @@ public class ItemStackUtils {
 
     static {
         try{
-            Class<?> craftItemStack = Class.forName("org.bukkit.craftbukkit."+VersionManager.NMS_VERSION+".inventory.CraftItemStack");
+            Class<?> craftItemStack;
+            try {
+                craftItemStack = Class.forName("org.bukkit.craftbukkit."+VersionManager.NMS_VERSION+".inventory.CraftItemStack");
+            } catch (ClassNotFoundException CNFEx) {
+                craftItemStack = Class.forName("org.bukkit.craftbukkit.inventory.CraftItemStack");
+            }
             Method convertor = null;
             for(Method m : craftItemStack.getMethods()) {
                 if(m.getName().equals("asBukkitCopy")) {
@@ -64,7 +71,14 @@ public class ItemStackUtils {
             materialName = materialName.substring(0, index);
             is = new ItemStack(Material.getMaterial(materialName), amount, data);
         } else is = new ItemStack(Material.getMaterial(materialName), amount);
-        if(datas.length == 3) is = Bukkit.getUnsafe().modifyItemStack(is, datas[2]);
+        if(datas.length == 3) {
+            try {
+                is = Bukkit.getUnsafe().modifyItemStack(is, datas[2]);
+            } catch (Throwable T) {
+                MobMoney.instance.getLogger().log(Level.CONFIG,"Invalid NBT tag in "+definiton);
+                throw T;
+            }
+        }
         return is;
     }
 

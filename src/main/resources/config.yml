@@ -18,7 +18,7 @@ defaultAnimations:
     format: '&2$&a%value%' # Name of the dropped items
     amountDrops: 3
     items:
-      - 1 DIAMOND {Enchantments:[{id:unbreaking,lvl:1}]}
+      # - 1 DIAMOND {Enchantments:[{id:unbreaking,lvl:1}]} # Sample of item with NBT tags. Please, use the NBT of your version. This is a sample.
       - 2 EMERALD
     order: RANDOM # You can use ORDERED instead. Then, it will drop first a diamond, then the emeralds.
     recollectableByEveryone: true # Everyone will be able to pick up the dropped item(s)

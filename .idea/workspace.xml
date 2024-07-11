@@ -9,11 +9,59 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Update to 5.1.6">
+    <list default="true" id="cd967637-e7e5-420d-ba62-7b1cc2eb6e95" name="Changes" comment="Update to 5.1.7">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/softdepend/MythicMobsConnector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/softdepend/MythicMobsConnector4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/MobMoney.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/MobMoney.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/PluginsJava_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/PluginsJava_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MMJava+/src/main/java/com/anderhurtado/spigot/mobmoney/util/softdepend/MythicMobsConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/softdepend/MythicMobsConnector5.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MobMoney.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MobMoney.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/MobMoney.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent$CancelReason.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent$CancelReason.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/AsyncMobMoneyEntityKilledEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/MobMoneyEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/event/MobMoneyEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/ConditionalAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/DailyLimit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/DailyLimit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/HotbarMessager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/HotbarMessager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Kill.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Kill.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$AdvancedBarChart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$AdvancedBarChart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$AdvancedPie.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$AdvancedPie.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$CustomChart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$CustomChart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$DrilldownPie.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$DrilldownPie.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$MultiLineChart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$MultiLineChart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$SimpleBarChart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$SimpleBarChart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$SimplePie.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$SimplePie.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$SingleLineChart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics$SingleLineChart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Metrics.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Mob.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Mob.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/HotbarMessager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/HotbarMessager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/PreconfiguredCommand$ExecutionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/PreconfiguredCommand$ExecutionType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/PreconfiguredCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/PreconfiguredCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/StrikeSystem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/StrikeSystem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Timer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/Timer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/objets/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/Cleanable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/Cleanable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/CleanableArrayList.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/CleanableArrayList.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/EventListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/MetaEntityManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/MetaEntityManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/UserCache.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/UserCache.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/function/Max.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/function/Max.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/function/Min.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/function/Min.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/softdepend/CrackShotConnector.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/softdepend/CrackShotConnector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/softdepend/MyPetsConnector.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/com/anderhurtado/spigot/mobmoney/util/softdepend/MyPetsConnector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobMoney/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/MobMoney.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/DamagedEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/PreconfiguredCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/PreconfiguredCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/objets/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/ItemStackUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/anderhurtado/spigot/mobmoney/util/ItemStackUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,23 +97,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Datos/Plugins/APIs/Java/Spigot/Plugins/AuraMobs-2.0.5.jar&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15234375&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.20530565&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "E:/Datos/Plugins/APIs/Java/Spigot/Plugins/MythicMobs-5.3.1.jar",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15234375",
+    "project.structure.side.proportion": "0.20530565"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ihbi\IdeaProjects\MobMoney\src\main\resources\language" />
@@ -286,7 +334,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719690800829</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Update to 5.1.7">
+      <option name="closed" value="true" />
+      <created>1720623168000</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1720623168000</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -318,6 +374,7 @@
     <MESSAGE value="Update to 5.1.4" />
     <MESSAGE value="Added turkish language" />
     <MESSAGE value="Update to 5.1.6" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to 5.1.6" />
+    <MESSAGE value="Update to 5.1.7" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update to 5.1.7" />
   </component>
 </project>
