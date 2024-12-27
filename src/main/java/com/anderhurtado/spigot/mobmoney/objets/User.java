@@ -15,7 +15,7 @@ public class User{
 	private static final UserCache USER_CACHE = UserCache.getInstance();
 	public static final HashMap<UUID,User> users=new HashMap<>();
 
-	private final double multiplicator;
+	private double multiplicator;
 	public static User getUser(UUID uuid){
 	    User u=users.get(uuid);
 	    if(u==null)u=new User(uuid);
@@ -39,14 +39,14 @@ public class User{
 		users.put(u,this);
 		uuid=u;
 		receiveOnDeath = USER_CACHE.receivesMessagesOnKill(this);
-		multiplicator = calculateMultiplicator();
+		calculateMultiplicator();
 	}
 
 	public double getMultiplicator() {
 		return multiplicator;
 	}
 
-	private double calculateMultiplicator() {
+	public void calculateMultiplicator() {
 		Player p = Bukkit.getPlayer(uuid);
 		double multiplicator = 1;
 		if(p != null) {
@@ -62,7 +62,7 @@ public class User{
 				}
 			}
 		}
-		return multiplicator;
+		this.multiplicator = multiplicator;
 	}
 
 	public boolean getReceiveOnDeath(){

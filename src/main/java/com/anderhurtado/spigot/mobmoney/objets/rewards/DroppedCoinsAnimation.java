@@ -19,6 +19,7 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.*;
+import net.milkbowl.vault.economy.EconomyResponse;
 import net.objecthunter.exp4j.Expression;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,8 +39,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.logging.Level;
 
-import static com.anderhurtado.spigot.mobmoney.MobMoney.eco;
+import static com.anderhurtado.spigot.mobmoney.MobMoney.*;
 
 public class DroppedCoinsAnimation implements RewardAnimation {
 
@@ -574,8 +576,16 @@ public class DroppedCoinsAnimation implements RewardAnimation {
             PickUpItemWrappedPacket pickUpPacket = new PickUpItemWrappedPacket(p, item.getEntityId(), mask.getAmount());
             pickUpPacket.play(p.getWorld());
             if((flag & 0b1) != 0) {
-                if(value >= 0) eco.depositPlayer(p, value);
-                else if(mob != null && mob.isAllowedNegativeValues()) eco.withdrawPlayer(p, -value);
+                EconomyResponse er = null;
+                if(value >= 0) er = eco.depositPlayer(p, value);
+                else if(mob != null && mob.isAllowedNegativeValues()) er = eco.withdrawPlayer(p, -value);
+                if(debug) {
+                    String message;
+                    if(er == null) message = "EconomyResponse is null!";
+                    else message = er.balance+" += " +er.amount+" -> "+er.type+": "+er.errorMessage;
+                    instance.getLogger().log(Level.INFO, "[DCA0] " + message);
+                    instance.getLogger().log(Level.INFO, "[DCA0] Total amount: "+eco.getBalance(p));
+                }
             }
             synchronized (ANIMATION_INSTANCES) {
                 ANIMATION_INSTANCES.remove(id);

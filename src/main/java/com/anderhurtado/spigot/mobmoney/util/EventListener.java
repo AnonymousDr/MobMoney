@@ -7,6 +7,7 @@ import com.anderhurtado.spigot.mobmoney.objets.DamagedEntity;
 import com.anderhurtado.spigot.mobmoney.objets.Mob;
 import com.anderhurtado.spigot.mobmoney.objets.User;
 import com.anderhurtado.spigot.mobmoney.objets.rewards.RewardAnimation;
+import net.milkbowl.vault.economy.EconomyResponse;
 import net.objecthunter.exp4j.Expression;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -21,6 +22,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 import static com.anderhurtado.spigot.mobmoney.MobMoney.*;
 import static com.anderhurtado.spigot.mobmoney.event.AsyncMobMoneyEntityKilledEvent.CancelReason.PLAYER_DAILY_LIMIT_REACHED;
@@ -148,9 +150,16 @@ public class EventListener implements Listener {
                         .replace("%player%", j.getDisplayName())
                         .replace("%reward%",eco.format(withdraw)), e.getKilledEntity()
                 );
-                if(withdraw > 0) eco.withdrawPlayer((OfflinePlayer)e.getKilledEntity(), withdraw);
-                else eco.depositPlayer((OfflinePlayer)e.getKilledEntity(), -withdraw);
+                EconomyResponse er = null;
+                if(withdraw > 0) er = eco.withdrawPlayer((OfflinePlayer)e.getKilledEntity(), withdraw);
+                else er = eco.depositPlayer((OfflinePlayer)e.getKilledEntity(), -withdraw);
                 if(e.getReward() == e.getWithdrawFromEntity()) reward = withdraw;
+                if(debug) {
+                    String message;
+                    if(er == null) message = "EconomyResponse is null!";
+                    else message = er.balance+" += " +er.amount+" -> "+er.type+": "+er.errorMessage;
+                    instance.getLogger().log(Level.INFO, "[EV0] " + message);
+                }
             }
             if(u.getReceiveOnDeath()) {
                 int flags = 0;
@@ -163,8 +172,15 @@ public class EventListener implements Listener {
                     flags |= ra.getFlags();
                 }
                 if((flags & 0b1) == 0) {
-                    if(reward >= 0) eco.depositPlayer(j, reward);
-                    else if(mob.isAllowedNegativeValues()) eco.withdrawPlayer(j, -reward);
+                    EconomyResponse er = null;
+                    if(reward >= 0) er = eco.depositPlayer(j, reward);
+                    else if(mob.isAllowedNegativeValues()) er = eco.withdrawPlayer(j, -reward);
+                    if(debug) {
+                        String message;
+                        if(er == null) message = "EconomyResponse is null!";
+                        else message = er.balance+" += " +er.amount+" -> "+er.type+": "+er.errorMessage;
+                        instance.getLogger().log(Level.INFO, "[EV1] " + message);
+                    }
                 }
                 if((flags & 0b10) == 0) {
                     String message;

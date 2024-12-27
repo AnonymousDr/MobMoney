@@ -315,16 +315,9 @@ public class MobMoney extends JavaPlugin{
 
 	@Override
 	public boolean onCommand(CommandSender j, Command cmd, String label, String[] args){
-		if(args.length==0){
-			boolean permiso=false;
-			if(j.hasPermission("mobmoney.reload")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.reload"));
-			if(j.hasPermission("mobmoney.enableworld")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.enableWorld"));
-			if(j.hasPermission("mobmoney.disableworld")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.disableWorld"));
-			if(j.hasPermission("mobmoney.toggle")&&(permiso=true))j.sendMessage(msg.get("Commands.Use.toggle"));
-			if(j.hasPermission("mobmoney.temporalMultiplier.set")) j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
-			if(!permiso)j.sendMessage(msg.get("Commands.noPermission"));
-			return true;
-		}String arg0=args[0];
+		String arg0;
+		if(args.length == 0) arg0 = "&1";
+		else arg0 = args[0];
 		if(arg0.equalsIgnoreCase(msg.get("Commands.arguments.reload"))){
 			if(!j.hasPermission("mobmoney.reload")){
 				j.sendMessage(msg.get("Commands.noPermission"));
@@ -456,12 +449,32 @@ public class MobMoney extends JavaPlugin{
 				return true;
 			}
 		}
+		if (arg0.equalsIgnoreCase("recalculatemultiplier")) {
+			if(!j.hasPermission("mobmoney.recalculatemultiplier")){
+				j.sendMessage(msg.get("Commands.noPermission"));
+				return true;
+			}if(args.length==1){
+				j.sendMessage(ChatColor.RED+"Usage: /"+label+" "+arg0+" <Player>");
+				return true;
+			}
+			String playerName = args[1];
+			Player player = Bukkit.getPlayerExact(playerName);
+			if(player == null) {
+				j.sendMessage(ChatColor.RED+"Player not found!");
+				return true;
+			}
+			User user = User.users.get(player.getUniqueId());
+			if(user != null) user.calculateMultiplicator();
+			j.sendMessage(ChatColor.GREEN+"[MobMoney] Permission recalculated.");
+			return true;
+		}
 		j.sendMessage(msg.get("Commands.invalidArguments"));
 		if(j.hasPermission("mobmoney.reload"))j.sendMessage(msg.get("Commands.Use.reload"));
 		if(j.hasPermission("mobmoney.enableworld"))j.sendMessage(msg.get("Commands.Use.enableWorld"));
 		if(j.hasPermission("mobmoney.disableworld"))j.sendMessage(msg.get("Commands.Use.disableWorld"));
 		if(j.hasPermission("mobmoney.toggle"))j.sendMessage(msg.get("Commands.Use.toggle"));
 		if(j.hasPermission("mobmoney.temporalMultiplier.set")) j.sendMessage(msg.getOrDefault("Commands.Use.temporalMultiplier", ChatColor.GREEN+"Set a temporal multiplier:"+ChatColor.AQUA+" /mobmoney multiplier <Duration:[1d23h15m31s]> <Multiplier:1.5>"));
+		if(j.hasPermission("mobmoney.recalculatemultiplier")) j.sendMessage(ChatColor.GREEN+"Recalculate user multiplicator: "+ChatColor.AQUA+"/mobmoney recalculatemultiplier <Player>");
 		return true;
 	}
 

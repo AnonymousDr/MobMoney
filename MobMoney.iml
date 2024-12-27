@@ -16,7 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/src/bin" />
     </content>
-    <orderEntry type="jdk" jdkName="openjdk-21" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="net.objecthunter.exp4j" level="project" />
     <orderEntry type="library" name="Plugins" level="project" />
@@ -31,6 +31,14 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="PluginsJava+" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
